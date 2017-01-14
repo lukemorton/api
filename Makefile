@@ -1,9 +1,9 @@
-all: build run
+all: build start
 
 build:
 	docker build -t api .
 
-run:
+start:
 	docker run -it --rm --publish 3000:3000 api
 
 deploy:

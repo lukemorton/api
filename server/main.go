@@ -1,9 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
+	"encoding/json"
+	"github.com/lukemorton/api/response"
 )
 
 const (
@@ -18,5 +19,6 @@ func main() {
 
 func Handle(w http.ResponseWriter, r *http.Request) {
 	log.Println("200 /")
-	fmt.Fprintln(w, "Hello world!!")
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response.SuccessResponse())
 }
