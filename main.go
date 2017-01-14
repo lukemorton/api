@@ -12,12 +12,12 @@ const (
 
 func main() {
 	flag.Parse()
-  log.Printf("Serving %s\n", port)
+	log.Printf("Serving %s\n", port)
 	http.HandleFunc("/", Handle)
 	log.Fatal(http.ListenAndServe(port, nil))
 }
 
 func Handle(w http.ResponseWriter, r *http.Request) {
-  log.Println("200 /")
+	log.Println("200 /")
 	fmt.Fprintln(w, "Hello world!!")
 }
