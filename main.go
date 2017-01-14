@@ -11,7 +11,6 @@ const (
 )
 
 func main() {
-	flag.Parse()
 	log.Printf("Serving %s\n", port)
 	http.HandleFunc("/", Handle)
 	log.Fatal(http.ListenAndServe(port, nil))
