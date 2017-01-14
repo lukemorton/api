@@ -1,21 +1,20 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"log"
 	"net/http"
 )
 
-var (
-	port = flag.String("port", ":3000", "Listen address")
+const (
+	port = ":3000"
 )
 
 func main() {
 	flag.Parse()
-  log.Printf("Serving %s\n", *port)
+  log.Printf("Serving %s\n", port)
 	http.HandleFunc("/", Handle)
-	log.Fatal(http.ListenAndServe(*port, nil))
+	log.Fatal(http.ListenAndServe(port, nil))
 }
 
 func Handle(w http.ResponseWriter, r *http.Request) {
