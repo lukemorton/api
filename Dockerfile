@@ -1,5 +1,5 @@
 FROM golang
-LABEL name=api
+LABEL name="api"
 ADD . /go/src/github.com/lukemorton/api
 RUN go install github.com/lukemorton/api
 CMD /go/bin/api
