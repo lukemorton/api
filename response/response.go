@@ -1,18 +1,28 @@
 package response
 
 type Response struct {
+	Status int
+	Body interface{}
+}
+
+
+type ResponseBody struct {
 	OK bool `json:"ok"`
 }
 
-type ErrorResponse struct {
-	Response
+type ErrorBody struct {
+	ResponseBody
   ErrorMessage string `json:"error,omitempty"`
 }
 
-func OK() Response {
-  return Response{true}
+func DefaultOK() Response {
+  return Response{200, ResponseBody{true}}
 }
 
-func Error(message string) ErrorResponse {
-  return ErrorResponse{Response{false}, message}
+func OK(body interface{}) Response {
+  return Response{200, body}
+}
+
+func Error(status int, message string) Response {
+  return Response{status, ErrorBody{ResponseBody{false}, message}}
 }
