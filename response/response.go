@@ -1,9 +1,14 @@
 package response
 
 type Response struct {
-	Success bool `json:"success" valid:"required"`
+	OK bool `json:"ok"`
+  ErrorMessage string `json:"error,omitempty"`
 }
 
-func SuccessResponse() Response {
-  return Response{true}
+func OK() Response {
+  return Response{OK: true}
+}
+
+func Error(message string) Response {
+  return Response{OK: false, ErrorMessage: message}
 }
