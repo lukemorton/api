@@ -27,6 +27,14 @@ make
 
 This will boot the app on [http://localhost:3000](http://localhost:3000)
 
+**Running app inside docker:**
+
+As this is what happens in production when the app is deployed it's worth testing.
+
+```
+make dockerStart
+```
+
 ## Deploying
 
 **Deploy to now.sh:**
