@@ -1,7 +1,5 @@
-FROM golang
+FROM scratch
 LABEL name="api"
-ADD . /go/src/github.com/lukemorton/api
-RUN go get github.com/gorilla/handlers
-RUN go install github.com/lukemorton/api/server
-CMD /go/bin/server
+ADD dist/server /
+CMD ["/server"]
 EXPOSE 3000
