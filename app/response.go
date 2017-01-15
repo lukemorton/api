@@ -5,17 +5,8 @@ type Response struct {
 	Body interface{}
 }
 
-type ResponseBody struct {
-	OK bool `json:"ok"`
-}
-
 type ErrorBody struct {
-	ResponseBody
   ErrorMessage string `json:"error,omitempty"`
-}
-
-func DefaultOK() Response {
-  return Response{200, ResponseBody{true}}
 }
 
 func OK(body interface{}) Response {
@@ -23,5 +14,5 @@ func OK(body interface{}) Response {
 }
 
 func Error(status int, message string) Response {
-  return Response{status, ErrorBody{ResponseBody{false}, message}}
+  return Response{status, ErrorBody{message}}
 }

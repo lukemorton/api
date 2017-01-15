@@ -1,54 +1,25 @@
 package main
 
 import (
-	"os"
-	"log"
 	"net/http"
-	"encoding/json"
 	"github.com/lukemorton/api/app"
 	"github.com/lukemorton/api/authors"
-	"github.com/gorilla/handlers"
-)
-
-const (
-	port = ":3000"
 )
 
 func main() {
-	log.Printf("Serving %s\n", port)
+	s := app.NewServer(":3000", http.NewServeMux())
 
-	mux := http.NewServeMux()
-
-	Handle(mux, "/", func (r *http.Request) app.Response {
+	s.Handle("/", func (r *http.Request) app.Response {
 		return app.Error(400, "Bad request, check the docs.")
 	})
 
-	Handle(mux, "/status.json", func (r *http.Request) app.Response {
-		return app.DefaultOK()
+	s.Handle("/status.json", func (r *http.Request) app.Response {
+		return app.OK(map[string]string{"status": "good"})
 	})
 
-	Handle(mux, "/authors.json", func (r *http.Request) app.Response {
+	s.Handle("/authors.json", func (r *http.Request) app.Response {
 		return app.OK(authors.Authors())
 	})
 
-	http.ListenAndServe(port, mux)
-}
-
-func Handler(handler http.HandlerFunc) http.Handler {
-	return handlers.CombinedLoggingHandler(os.Stdout, handler)
-}
-
-func JSON(w http.ResponseWriter, status int, body interface{}) {
-	w.WriteHeader(status)
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(body)
-}
-
-type HandlerFunc func (r *http.Request) app.Response
-
-func Handle(mux *http.ServeMux, path string, handler HandlerFunc) {
-	mux.Handle(path, Handler(func (w http.ResponseWriter, r *http.Request) {
-		response := handler(r)
-		JSON(w, response.Status, response.Body)
-	}))
+	http.ListenAndServe(s.Port, s.Mux)
 }
