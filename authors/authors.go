@@ -5,11 +5,11 @@ type authors struct {
 }
 
 type author struct {
-  Name string `json:"name"`
+	Name string `json:"name"`
 }
 
 func Authors() authors {
-  luke := author{"Luke Morton"}
-  bob := author{"Bob"}
-  return authors{[]author{luke, bob}}
+	luke := author{"Luke Morton"}
+	bob := author{"Bob"}
+	return authors{[]author{luke, bob}}
 }
