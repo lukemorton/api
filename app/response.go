@@ -1,10 +1,9 @@
-package response
+package app
 
 type Response struct {
 	Status int
 	Body interface{}
 }
-
 
 type ResponseBody struct {
 	OK bool `json:"ok"`

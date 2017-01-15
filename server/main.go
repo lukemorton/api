@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 	"encoding/json"
-	"github.com/lukemorton/api/response"
+	"github.com/lukemorton/api/app"
 	"github.com/lukemorton/api/authors"
 	"github.com/gorilla/handlers"
 )
@@ -19,16 +19,16 @@ func main() {
 
 	mux := http.NewServeMux()
 
-	Handle(mux, "/", func (r *http.Request) response.Response {
-		return response.Error(400, "Bad request, check the docs.")
+	Handle(mux, "/", func (r *http.Request) app.Response {
+		return app.Error(400, "Bad request, check the docs.")
 	})
 
-	Handle(mux, "/status.json", func (r *http.Request) response.Response {
-		return response.DefaultOK()
+	Handle(mux, "/status.json", func (r *http.Request) app.Response {
+		return app.DefaultOK()
 	})
 
-	Handle(mux, "/authors.json", func (r *http.Request) response.Response {
-		return response.OK(authors.Authors())
+	Handle(mux, "/authors.json", func (r *http.Request) app.Response {
+		return app.OK(authors.Authors())
 	})
 
 	http.ListenAndServe(port, mux)
@@ -44,7 +44,7 @@ func JSON(w http.ResponseWriter, status int, body interface{}) {
 	json.NewEncoder(w).Encode(body)
 }
 
-type HandlerFunc func (r *http.Request) response.Response
+type HandlerFunc func (r *http.Request) app.Response
 
 func Handle(mux *http.ServeMux, path string, handler HandlerFunc) {
 	mux.Handle(path, Handler(func (w http.ResponseWriter, r *http.Request) {
