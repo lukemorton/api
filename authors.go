@@ -1,4 +1,4 @@
-package authors
+package api
 
 type authors struct {
 	Authors []author `json:"authors"`
