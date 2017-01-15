@@ -13,7 +13,10 @@
 If you have go locally install you can just use `go get`:
 
 ```
-go get github.com/lukemorton/api
+cd $GOPATH
+go get github.com/lukemorton/api/server
+cd src/github.com/lukemorton/api/server
+go get ./...
 ```
 
 **Running app:**
