@@ -2,23 +2,27 @@ package main
 
 import (
 	"github.com/lukemorton/api"
-	"net/http"
+	"gopkg.in/gin-gonic/gin.v1"
 )
 
+func App() *gin.Engine {
+	app := gin.Default()
+
+	app.GET("/status.json", func(c *gin.Context) {
+	  c.JSON(200, gin.H{"status": "good"})
+	})
+
+	app.GET("/authors.json", func(c *gin.Context) {
+	  c.JSON(200, api.Authors())
+	})
+
+	app.NoRoute(func(c *gin.Context) {
+	  c.JSON(400, api.Error("Bad request, check the docs."))
+	})
+
+	return app
+}
+
 func main() {
-	s := api.NewServer(":3000", http.NewServeMux())
-
-	s.Handle("/", func(r *http.Request) api.Response {
-		return api.Error(400, "Bad request, check the docs.")
-	})
-
-	s.Handle("/status.json", func(r *http.Request) api.Response {
-		return api.OK(map[string]string{"status": "good"})
-	})
-
-	s.Handle("/authors.json", func(r *http.Request) api.Response {
-		return api.OK(api.Authors())
-	})
-
-	http.ListenAndServe(s.Port, s.Mux)
+	App().Run(":3000")
 }
