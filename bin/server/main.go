@@ -9,15 +9,15 @@ func App() *gin.Engine {
 	app := gin.Default()
 
 	app.GET("/status.json", func(c *gin.Context) {
-	  c.JSON(200, gin.H{"status": "good"})
+		c.JSON(200, gin.H{"status": "good"})
 	})
 
 	app.GET("/authors.json", func(c *gin.Context) {
-	  c.JSON(200, api.Authors())
+		c.JSON(200, api.Authors())
 	})
 
 	app.NoRoute(func(c *gin.Context) {
-	  c.JSON(400, api.Error("Bad request, check the docs."))
+		c.JSON(400, api.Error("Bad request, check the docs."))
 	})
 
 	return app
