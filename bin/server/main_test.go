@@ -41,6 +41,6 @@ func POST(path string) *httptest.ResponseRecorder {
 func request(method string, path string) *httptest.ResponseRecorder {
 	r, _ := http.NewRequest(method, path, nil)
 	w := httptest.NewRecorder()
-	App().ServeHTTP(w, r)
+	AppEngine().ServeHTTP(w, r)
 	return w
 }

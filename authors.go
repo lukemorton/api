@@ -8,8 +8,12 @@ type author struct {
 	Name string `json:"name"`
 }
 
-func Authors() authors {
-	luke := author{"Luke Morton"}
-	bob := author{"Bob"}
-	return authors{[]author{luke, bob}}
+func Authors(authorNames []string) authors {
+	var a []author
+
+	for _, name := range authorNames {
+		a = append(a, author{name})
+	}
+
+	return authors{a}
 }
