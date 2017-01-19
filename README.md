@@ -19,6 +19,12 @@ cd src/github.com/lukemorton/api
 go get ./...
 ```
 
+**Running tests:**
+
+```
+make test
+```
+
 **Running app:**
 
 ```
@@ -32,7 +38,7 @@ This will boot the app on [http://localhost:3000](http://localhost:3000)
 As this is what happens in production when the app is deployed it's worth testing.
 
 ```
-make dockerStart
+make docker
 ```
 
 ## Deploying
