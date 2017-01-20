@@ -8,7 +8,7 @@ start: test
 
 build: test
 	mkdir -p dist
-	CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o dist/server github.com/lukemorton/api/bin/server
+	CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o ./dist/server ./bin/server
 	docker build -t api .
 
 docker: build
