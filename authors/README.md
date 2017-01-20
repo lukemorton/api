@@ -1,4 +1,4 @@
-# api.lukemorton.co.uk
+# api.lukemorton.co.uk/authors
 
 ## Prerequisites
 

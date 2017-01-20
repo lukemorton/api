@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/lukemorton/api"
+	"github.com/lukemorton/api/authors"
 	"gopkg.in/gin-gonic/gin.v1"
 )
 
