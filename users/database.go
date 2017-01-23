@@ -9,12 +9,12 @@ import (
 func ConnectDB() *DB {
 	db, err := sqlx.Connect("sqlite3", ":memory:")
 	db.MustExec(`
-    CREATE TABLE users (
-      created_at datetime,
-      updated_at datetime,
-      email text
-    );
-  `)
+		CREATE TABLE users (
+			created_at datetime,
+			updated_at datetime,
+			email text
+		);
+	`)
 
 	if err != nil {
 		log.Fatalln(err)
