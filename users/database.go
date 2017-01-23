@@ -8,6 +8,13 @@ import (
 
 func ConnectDB() *DB {
 	db, err := sqlx.Connect("sqlite3", ":memory:")
+	db.MustExec(`
+    CREATE TABLE users (
+      created_at datetime,
+      updated_at datetime,
+      email text
+    );
+  `)
 
 	if err != nil {
 		log.Fatalln(err)
@@ -29,7 +36,6 @@ func (db *DB) Create(user User) error {
 		INSERT INTO users (created_at, updated_at, email)
 		VALUES (:created_at, :updated_at, :email)
 	`
-
-	_, err := db.NamedExec(q, user)
+	_, err := db.NamedExec(q, &user)
 	return err
 }

@@ -7,7 +7,7 @@ import (
 
 func TestRegisterValidUser(t *testing.T) {
 	user := validUser()
-	Register(mockDB{}, user)
+	Register(mockUserCreator{}, user)
 	assert.NotNil(t, user.CreatedAt)
 	assert.NotNil(t, user.UpdatedAt)
 }
@@ -16,8 +16,8 @@ func validUser() User {
 	return User{Email: "lukemorton.dev@gmail.com"}
 }
 
-type mockDB struct{}
+type mockUserCreator struct{}
 
-func (db mockDB) Create(user User) error {
+func (db mockUserCreator) Create(user User) error {
 	return nil
 }

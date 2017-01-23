@@ -29,8 +29,13 @@ func (app *App) Engine() *gin.Engine {
 	e.POST("/register.json", func(c *gin.Context) {
 		var user *users.User
 		c.BindJSON(&user)
-		users.Register(app.DB, *user)
-		c.JSON(200, user)
+		err := users.Register(app.DB, *user)
+
+		if err == nil {
+			c.JSON(200, user)
+		} else {
+			c.JSON(500, gin.H{"error": err.Error()})
+		}
 	})
 
 	e.NoRoute(func(c *gin.Context) {
