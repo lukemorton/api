@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"log"
 )
 
 func TestStatus(t *testing.T) {
@@ -44,7 +45,7 @@ func POST(path string, body interface{}) *httptest.ResponseRecorder {
 	return request("POST", path, bytes.NewBuffer(jsonBody))
 }
 
-type h map[string]string
+type h map[string]interface{}
 
 func request(method string, path string, body io.Reader) *httptest.ResponseRecorder {
 	r, _ := http.NewRequest(method, path, body)
@@ -55,6 +56,11 @@ func request(method string, path string, body io.Reader) *httptest.ResponseRecor
 
 func jsonResponse(w *httptest.ResponseRecorder) h {
 	var response *h
-	json.Unmarshal(w.Body.Bytes(), &response)
+	err := json.Unmarshal(w.Body.Bytes(), &response)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	return *response
 }

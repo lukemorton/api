@@ -23,9 +23,10 @@ type UserStore struct {
 func (db *UserStore) CreateStore() {
 	db.MustExec(`
 		CREATE TABLE users (
-			created_at datetime,
-			updated_at datetime,
-			email text
+			id INTEGER PRIMARY KEY,
+			created_at DATETIME,
+			updated_at DATETIME,
+			email TEXT
 		);
 	`)
 }
