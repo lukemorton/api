@@ -10,14 +10,14 @@ func main() {
 }
 
 func AppEngine() *gin.Engine {
-	db := users.ConnectDB()
-	db.CreateTable()
-	a := App{db}
+	users := users.ConnectUserStore()
+	users.CreateStore()
+	a := App{users}
 	return a.Engine()
 }
 
 type App struct {
-	DB *users.DB
+	Store *users.UserStore
 }
 
 func (app *App) Engine() *gin.Engine {
@@ -30,7 +30,7 @@ func (app *App) Engine() *gin.Engine {
 	e.POST("/register.json", func(c *gin.Context) {
 		var user *users.User
 		c.BindJSON(&user)
-		err := users.Register(app.DB, *user)
+		err := users.Register(app.Store, *user)
 
 		if err == nil {
 			c.JSON(200, user)

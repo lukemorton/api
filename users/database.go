@@ -6,21 +6,21 @@ import (
 	"log"
 )
 
-func ConnectDB() *DB {
+func ConnectUserStore() *UserStore {
 	db, err := sqlx.Connect("sqlite3", ":memory:")
 
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	return &DB{db}
+	return &UserStore{db}
 }
 
-type DB struct {
+type UserStore struct {
 	*sqlx.DB
 }
 
-func (db *DB) CreateTable() {
+func (db *UserStore) CreateStore() {
 	db.MustExec(`
 		CREATE TABLE users (
 			created_at datetime,
@@ -34,7 +34,7 @@ type UserCreator interface {
 	Create(user User) error
 }
 
-func (db *DB) Create(user User) error {
+func (db *UserStore) Create(user User) error {
 	q := `
 		INSERT INTO users (created_at, updated_at, email)
 		VALUES (:created_at, :updated_at, :email)

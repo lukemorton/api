@@ -18,6 +18,6 @@ func validUser() User {
 
 type mockUserCreator struct{}
 
-func (db mockUserCreator) Create(user User) error {
+func (users mockUserCreator) Create(user User) error {
 	return nil
 }

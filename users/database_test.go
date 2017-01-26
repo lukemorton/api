@@ -7,10 +7,10 @@ import (
 )
 
 func TestCreateUser(t *testing.T) {
-	db := ConnectDB()
-	db.CreateTable()
+	users := ConnectUserStore()
+	users.CreateStore()
 
-	err := db.Create(validUserWithDates())
+	err := users.Create(validUserWithDates())
 	assert.Nil(t, err)
 }
 

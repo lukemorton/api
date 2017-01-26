@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func Register(db UserCreator, user User) error {
+func Register(users UserCreator, user User) error {
 	err := validate(user)
 	user.CreatedAt = time.Now()
 	user.UpdatedAt = time.Now()
@@ -14,7 +14,7 @@ func Register(db UserCreator, user User) error {
 		return err
 	}
 
-	return db.Create(user)
+	return users.Create(user)
 }
 
 func validate(user User) error {
