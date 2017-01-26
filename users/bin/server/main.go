@@ -11,6 +11,7 @@ func main() {
 
 func AppEngine() *gin.Engine {
 	db := users.ConnectDB()
+	db.CreateTable()
 	a := App{db}
 	return a.Engine()
 }
