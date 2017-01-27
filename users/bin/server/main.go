@@ -30,7 +30,7 @@ func (app *App) Engine() *gin.Engine {
 	e.POST("/register.json", func(c *gin.Context) {
 		var user *users.User
 		c.BindJSON(&user)
-		err := users.Register(app.Store, *user)
+		err := users.Register(app.Store, user)
 
 		if err == nil {
 			c.JSON(200, user)

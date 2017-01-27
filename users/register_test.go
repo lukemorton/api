@@ -7,7 +7,8 @@ import (
 
 func TestRegisterValidUser(t *testing.T) {
 	user := validUser()
-	Register(mockUserCreator{}, user)
+	Register(mockUserCreator{}, &user)
+	assert.NotNil(t, user.Id)
 	assert.NotNil(t, user.CreatedAt)
 	assert.NotNil(t, user.UpdatedAt)
 }
@@ -18,6 +19,6 @@ func validUser() User {
 
 type mockUserCreator struct{}
 
-func (users mockUserCreator) Create(user User) error {
+func (users mockUserCreator) Create(user *User) error {
 	return nil
 }

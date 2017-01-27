@@ -5,8 +5,8 @@ import (
 	"time"
 )
 
-func Register(users UserCreator, user User) error {
-	err := validate(user)
+func Register(users UserCreator, user *User) error {
+	err := validate(*user)
 	user.CreatedAt = time.Now()
 	user.UpdatedAt = time.Now()
 

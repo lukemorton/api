@@ -32,14 +32,21 @@ func (db *UserStore) CreateStore() {
 }
 
 type UserCreator interface {
-	Create(user User) error
+	Create(user *User) error
 }
 
-func (db *UserStore) Create(user User) error {
+func (db *UserStore) Create(user *User) error {
 	q := `
 		INSERT INTO users (created_at, updated_at, email)
 		VALUES (:created_at, :updated_at, :email)
 	`
-	_, err := db.NamedExec(q, &user)
+	result, err := db.NamedExec(q, *user)
+
+	if err != nil {
+		return err
+	}
+
+	id, err := result.LastInsertId()
+	user.Id = id
 	return err
 }

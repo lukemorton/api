@@ -24,8 +24,8 @@ func TestAutoIncrementID(t *testing.T) {
 	assertIncrementedID(t, users)
 }
 
-func validUserWithDates() User {
-	return User{
+func validUserWithDates() *User {
+	return &User{
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 		Email:     "lukemorton.dev@gmail.com",

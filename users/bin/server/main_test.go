@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/lukemorton/api/users"
 	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
@@ -18,9 +19,10 @@ func TestStatus(t *testing.T) {
 
 func TestRegister(t *testing.T) {
 	w := POST("/register.json", h{"email": "lukemorton.dev@gmail.com"})
-	response := jsonResponse(w)
+	user := userFromResponse(w)
 	assert.Equal(t, w.Code, 200, "status should be 200")
-	assert.Equal(t, response["email"], "lukemorton.dev@gmail.com", "includes email")
+ 	assert.Equal(t, int64(1), user.Id, "includes ID")
+	assert.Equal(t, "lukemorton.dev@gmail.com", user.Email, "includes email")
 }
 
 func TestBadRequest(t *testing.T) {
@@ -54,13 +56,13 @@ func request(method string, path string, body io.Reader) *httptest.ResponseRecor
 	return w
 }
 
-func jsonResponse(w *httptest.ResponseRecorder) h {
-	var response *h
-	err := json.Unmarshal(w.Body.Bytes(), &response)
+func userFromResponse(w *httptest.ResponseRecorder) users.User {
+	var user *users.User
+	err := json.Unmarshal(w.Body.Bytes(), &user)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	return *response
+	return *user
 }
