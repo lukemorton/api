@@ -18,17 +18,11 @@ func Register(users UserCreator, r RegisterUser) (User, error) {
 		return User{}, err
 	}
 
-	passwordHash, err := bcrypt.GenerateFromPassword([]byte(r.Password), 10)
-
-	if err != nil {
-		return User{}, err
-	}
-
 	user := User{
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 		Email: r.Email,
-		PasswordHash: string(passwordHash),
+		PasswordHash: passwordHash(r),
 	}
 
 	err = users.Create(&user)
@@ -43,4 +37,14 @@ func validate(user RegisterUser) error {
 	} else {
 		return nil
 	}
+}
+
+func passwordHash(user RegisterUser) string {
+	passwordHash, err := bcrypt.GenerateFromPassword([]byte(user.Password), 10)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return string(passwordHash)
 }
