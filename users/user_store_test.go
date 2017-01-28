@@ -37,6 +37,16 @@ func TestUniqueEmail(t *testing.T) {
 	assert.Error(t, err)
 }
 
+func TestPanicOnSQLError(t *testing.T) {
+	users := ConnectUserStore()
+	users.CreateStore()
+	users.createQuery = "hmm"
+
+	assert.Panics(t, func() {
+		users.Create(validUserWithDates("a@gmail.com"))
+	})
+}
+
 func validUserWithDates(email string) *User {
 	return &User{
 		CreatedAt:    time.Now(),
