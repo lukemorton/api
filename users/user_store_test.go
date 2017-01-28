@@ -48,7 +48,7 @@ func assertIncrementedID(t *testing.T, db *UserStore) {
 		t.Fatal(err)
 	}
 
-	assert.Equal(t, len(id), 2)
-	assert.Equal(t, id[0], 1)
-	assert.Equal(t, id[1], 2)
+	assert.Equal(t, 2, len(id))
+	assert.Equal(t, 1, id[0])
+	assert.Equal(t, 2, id[1])
 }
