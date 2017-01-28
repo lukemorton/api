@@ -7,6 +7,13 @@ import (
 	"log"
 )
 
+const (
+	defaultCreateQuery = `
+		INSERT INTO users (created_at, updated_at, email, password_hash)
+		VALUES (:created_at, :updated_at, :email, :password_hash)
+	`
+)
+
 func ConnectUserStore() *UserStore {
 	db, err := sqlx.Connect("sqlite3", ":memory:")
 
@@ -14,11 +21,12 @@ func ConnectUserStore() *UserStore {
 		log.Fatalln(err)
 	}
 
-	return &UserStore{db}
+	return &UserStore{db, defaultCreateQuery}
 }
 
 type UserStore struct {
 	*sqlx.DB
+	createQuery string
 }
 
 func (db *UserStore) CreateStore() {
@@ -38,11 +46,7 @@ type UserCreator interface {
 }
 
 func (db *UserStore) Create(user *User) error {
-	q := `
-		INSERT INTO users (created_at, updated_at, email, password_hash)
-		VALUES (:created_at, :updated_at, :email, :password_hash)
-	`
-	result, err := db.NamedExec(q, *user)
+	result, err := db.NamedExec(db.createQuery, *user)
 
 	if err != nil {
 		if err.Error() == "UNIQUE constraint failed: users.email" {
