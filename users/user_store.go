@@ -12,6 +12,9 @@ const (
 		INSERT INTO users (created_at, updated_at, email, password_hash)
 		VALUES (:created_at, :updated_at, :email, :password_hash)
 	`
+	defaultFindByEmailQuery = `
+		SELECT * FROM users WHERE email = ?
+	`
 )
 
 func ConnectUserStore() *UserStore {
@@ -21,12 +24,17 @@ func ConnectUserStore() *UserStore {
 		log.Fatalln(err)
 	}
 
-	return &UserStore{db, defaultCreateQuery}
+	return &UserStore{
+		db,
+		defaultCreateQuery,
+		defaultFindByEmailQuery,
+	}
 }
 
 type UserStore struct {
 	*sqlx.DB
 	createQuery string
+	findByEmailQuery string
 }
 
 func (db *UserStore) CreateStore() {
@@ -43,6 +51,10 @@ func (db *UserStore) CreateStore() {
 
 type UserCreator interface {
 	Create(user *User) error
+}
+
+type UserFinder interface {
+	FindByEmail(email string) User
 }
 
 func (db *UserStore) Create(user *User) error {
@@ -64,4 +76,15 @@ func (db *UserStore) Create(user *User) error {
 
 	user.Id = id
 	return nil
+}
+
+func (db *UserStore) FindByEmail(email string) User {
+	user := User{}
+	err := db.Get(&user, db.findByEmailQuery, email)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return user
 }

@@ -37,7 +37,7 @@ func TestUniqueEmail(t *testing.T) {
 	assert.EqualError(t, err, "Email already taken")
 }
 
-func TestPanicOnSQLError(t *testing.T) {
+func TestCreatePanicOnSQLError(t *testing.T) {
 	users := ConnectUserStore()
 	users.CreateStore()
 	users.createQuery = "hmm"
@@ -45,6 +45,15 @@ func TestPanicOnSQLError(t *testing.T) {
 	assert.Panics(t, func() {
 		users.Create(validUserWithDates("a@gmail.com"))
 	})
+}
+
+func TestFindByEmail(t *testing.T) {
+	users := ConnectUserStore()
+	users.CreateStore()
+	users.Create(validUserWithDates("a@gmail.com"))
+
+	user := users.FindByEmail("a@gmail.com")
+	assert.Equal(t, "a@gmail.com", user.Email)
 }
 
 func validUserWithDates(email string) *User {
