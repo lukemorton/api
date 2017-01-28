@@ -6,15 +6,19 @@ import (
 )
 
 func TestRegisterValidUser(t *testing.T) {
-	user := validUser()
-	Register(mockUserCreator{}, &user)
+	user, err := Register(mockUserCreator{}, validUser())
+	assert.Nil(t, err)
 	assert.NotNil(t, user.Id)
 	assert.NotNil(t, user.CreatedAt)
 	assert.NotNil(t, user.UpdatedAt)
+	assert.NotNil(t, user.PasswordHash)
 }
 
-func validUser() User {
-	return User{Email: "lukemorton.dev@gmail.com"}
+func validUser() RegisterUser {
+	return RegisterUser{
+		Email: "lukemorton.dev@gmail.com",
+		Password: "bob",
+	}
 }
 
 type mockUserCreator struct{}
