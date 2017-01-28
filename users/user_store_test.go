@@ -10,7 +10,7 @@ func TestCreateUser(t *testing.T) {
 	users := ConnectUserStore()
 	users.CreateStore()
 
-	err := users.Create(validUserWithDates())
+	err := users.Create(validUserWithDates("a@gmail.com"))
 	assert.Nil(t, err)
 	assertUserStored(t, users)
 }
@@ -19,16 +19,29 @@ func TestAutoIncrementID(t *testing.T) {
 	users := ConnectUserStore()
 	users.CreateStore()
 
-	users.Create(validUserWithDates())
-	users.Create(validUserWithDates())
+	users.Create(validUserWithDates("a@gmail.com"))
+	users.Create(validUserWithDates("b@gmail.com"))
 	assertIncrementedID(t, users)
 }
 
-func validUserWithDates() *User {
+func TestUniqueEmail(t *testing.T) {
+	users := ConnectUserStore()
+	users.CreateStore()
+
+	var err error
+
+	err = users.Create(validUserWithDates("a@gmail.com"))
+	assert.Nil(t, err)
+
+	err = users.Create(validUserWithDates("a@gmail.com"))
+	assert.Error(t, err)
+}
+
+func validUserWithDates(email string) *User {
 	return &User{
 		CreatedAt:    time.Now(),
 		UpdatedAt:    time.Now(),
-		Email:        "lukemorton.dev@gmail.com",
+		Email:        email,
 		PasswordHash: "bob",
 	}
 }
@@ -36,7 +49,7 @@ func validUserWithDates() *User {
 func assertUserStored(t *testing.T, db *UserStore) {
 	user := User{}
 	db.Get(&user, "SELECT email, password_hash FROM users")
-	assert.Equal(t, "lukemorton.dev@gmail.com", user.Email)
+	assert.Equal(t, "a@gmail.com", user.Email)
 	assert.Equal(t, "bob", user.PasswordHash)
 }
 

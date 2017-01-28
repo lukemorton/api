@@ -32,12 +32,7 @@ func Register(users UserCreator, r RegisterUser) (User, error) {
 	}
 
 	err = users.Create(&user)
-
-	if err != nil {
-		return user, err
-	}
-
-	return user, nil
+	return user, err
 }
 
 func validate(user RegisterUser) error {
