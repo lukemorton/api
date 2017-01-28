@@ -34,7 +34,7 @@ func TestUniqueEmail(t *testing.T) {
 	assert.Nil(t, err)
 
 	err = users.Create(validUserWithDates("a@gmail.com"))
-	assert.Error(t, err)
+	assert.EqualError(t, err, "Email already taken")
 }
 
 func TestPanicOnSQLError(t *testing.T) {
