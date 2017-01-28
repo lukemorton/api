@@ -19,9 +19,9 @@ func Register(users UserCreator, r RegisterUser) (User, error) {
 	}
 
 	user := User{
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
-		Email: r.Email,
+		CreatedAt:    time.Now(),
+		UpdatedAt:    time.Now(),
+		Email:        r.Email,
 		PasswordHash: passwordHash(r),
 	}
 

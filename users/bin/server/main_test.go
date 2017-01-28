@@ -19,7 +19,7 @@ func TestStatus(t *testing.T) {
 
 func TestRegister(t *testing.T) {
 	w := POST("/register.json", h{
-		"email": "lukemorton.dev@gmail.com",
+		"email":    "lukemorton.dev@gmail.com",
 		"password": "bob",
 	})
 	user := userFromResponse(w)

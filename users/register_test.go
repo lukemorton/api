@@ -16,7 +16,7 @@ func TestRegisterValidUser(t *testing.T) {
 
 func validUser() RegisterUser {
 	return RegisterUser{
-		Email: "lukemorton.dev@gmail.com",
+		Email:    "lukemorton.dev@gmail.com",
 		Password: "bob",
 	}
 }
