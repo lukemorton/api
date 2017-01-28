@@ -12,7 +12,7 @@ type RegisterUser struct {
 }
 
 func Register(users UserCreator, r RegisterUser) (User, error) {
-	err := validate(r)
+	err := validateRegisterUser(r)
 
 	if err != nil {
 		return User{}, err
@@ -29,7 +29,7 @@ func Register(users UserCreator, r RegisterUser) (User, error) {
 	return user, err
 }
 
-func validate(user RegisterUser) error {
+func validateRegisterUser(user RegisterUser) error {
 	if user.Email == "" {
 		return errors.New("User requires email address")
 	} else if user.Password == "" {
