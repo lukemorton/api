@@ -6,10 +6,10 @@ import (
 	"github.com/lukemorton/api/users"
 	"github.com/stretchr/testify/assert"
 	"io"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"log"
 )
 
 func TestStatus(t *testing.T) {
@@ -21,7 +21,7 @@ func TestRegister(t *testing.T) {
 	w := POST("/register.json", h{"email": "lukemorton.dev@gmail.com"})
 	user := userFromResponse(w)
 	assert.Equal(t, w.Code, 200, "status should be 200")
- 	assert.Equal(t, int64(1), user.Id, "includes ID")
+	assert.Equal(t, int64(1), user.Id, "includes ID")
 	assert.Equal(t, "lukemorton.dev@gmail.com", user.Email, "includes email")
 }
 
