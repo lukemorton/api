@@ -26,21 +26,18 @@ func TestAutoIncrementID(t *testing.T) {
 
 func validUserWithDates() *User {
 	return &User{
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
-		Email:     "lukemorton.dev@gmail.com",
+		CreatedAt:    time.Now(),
+		UpdatedAt:    time.Now(),
+		Email:        "lukemorton.dev@gmail.com",
+		PasswordHash: "bob",
 	}
 }
 
 func assertUserStored(t *testing.T, db *UserStore) {
-	var email string
-	err := db.Get(&email, "SELECT email FROM users")
-
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	assert.Equal(t, email, "lukemorton.dev@gmail.com")
+	user := User{}
+	db.Get(&user, "SELECT email, password_hash FROM users")
+	assert.Equal(t, "lukemorton.dev@gmail.com", user.Email)
+	assert.Equal(t, "bob", user.PasswordHash)
 }
 
 func assertIncrementedID(t *testing.T, db *UserStore) {

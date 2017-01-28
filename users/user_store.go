@@ -26,7 +26,8 @@ func (db *UserStore) CreateStore() {
 			id INTEGER PRIMARY KEY,
 			created_at DATETIME,
 			updated_at DATETIME,
-			email TEXT
+			email VARCHAR,
+			password_hash VARCHAR
 		);
 	`)
 }
@@ -37,8 +38,8 @@ type UserCreator interface {
 
 func (db *UserStore) Create(user *User) error {
 	q := `
-		INSERT INTO users (created_at, updated_at, email)
-		VALUES (:created_at, :updated_at, :email)
+		INSERT INTO users (created_at, updated_at, email, password_hash)
+		VALUES (:created_at, :updated_at, :email, :password_hash)
 	`
 	result, err := db.NamedExec(q, *user)
 
