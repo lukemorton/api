@@ -47,12 +47,23 @@ func TestCreatePanicOnSQLError(t *testing.T) {
 	})
 }
 
+func TestUpdateFieldByEmail(t *testing.T) {
+	users := SQLUserStore()
+	users.CreateStore()
+	users.Create(validUserWithDates("a@gmail.com"))
+
+	err := users.UpdateResetTokenHashByEmail("a@gmail.com", "bob")
+	assert.Nil(t, err)
+	assertResetPasswordTokenChanged(t, users)
+}
+
 func TestFindByEmail(t *testing.T) {
 	users := SQLUserStore()
 	users.CreateStore()
 	users.Create(validUserWithDates("a@gmail.com"))
 
-	user, _ := users.FindByEmail("a@gmail.com")
+	user, err := users.FindByEmail("a@gmail.com")
+	assert.Nil(t, err)
 	assert.Equal(t, "a@gmail.com", user.Email)
 }
 
@@ -91,4 +102,10 @@ func assertIncrementedID(t *testing.T, db *sqlUserStore) {
 	assert.Equal(t, 2, len(id))
 	assert.Equal(t, 1, id[0])
 	assert.Equal(t, 2, id[1])
+}
+
+func assertResetPasswordTokenChanged(t *testing.T, db *sqlUserStore) {
+	var token string
+	db.Get(&token, "SELECT reset_token_hash FROM users")
+	assert.Equal(t, "bob", token)
 }
