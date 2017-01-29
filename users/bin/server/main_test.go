@@ -68,6 +68,13 @@ func TestResetPassword(t *testing.T) {
 	assert.Equal(t, w.Code, 200, "status should be 200")
 }
 
+func TestResetPasswordError(t *testing.T) {
+	w := POST("/password/reset.json", h{
+		"email": "lukemorton.dev@gmail.com",
+	})
+	assert.Equal(t, w.Code, 422, "status should be 422")
+}
+
 func TestBadRequest(t *testing.T) {
 	var w *httptest.ResponseRecorder
 

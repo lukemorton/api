@@ -61,7 +61,7 @@ func (app *app) Engine() *gin.Engine {
 			log.Println(gin.H{"token": token})
 			c.JSON(200, gin.H{"message": "Reset token has been sent to your email address"})
 		} else {
-			c.JSON(401, gin.H{"error": err.Error()})
+			c.JSON(422, gin.H{"error": err.Error()})
 		}
 	})
 
