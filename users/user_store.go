@@ -8,6 +8,15 @@ import (
 )
 
 const (
+	defaultCreateTableQuery = `
+		CREATE TABLE users (
+			id INTEGER PRIMARY KEY,
+			created_at DATETIME,
+			updated_at DATETIME,
+			email VARCHAR UNIQUE,
+			password_hash VARCHAR
+		);
+	`
 	defaultCreateQuery = `
 		INSERT INTO users (created_at, updated_at, email, password_hash)
 		VALUES (:created_at, :updated_at, :email, :password_hash)
@@ -38,15 +47,7 @@ type UserStore struct {
 }
 
 func (db *UserStore) CreateStore() {
-	db.MustExec(`
-		CREATE TABLE users (
-			id INTEGER PRIMARY KEY,
-			created_at DATETIME,
-			updated_at DATETIME,
-			email VARCHAR UNIQUE,
-			password_hash VARCHAR
-		);
-	`)
+	db.MustExec(defaultCreateTableQuery)
 }
 
 type UserCreator interface {
