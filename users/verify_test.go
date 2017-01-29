@@ -16,6 +16,22 @@ func TestVerifyValidUser(t *testing.T) {
 	assert.NotNil(t, user.PasswordHash)
 }
 
+func TestVerifyUserWithoutEmail(t *testing.T) {
+	_, err := Verify(mockUserFinder{}, VerifyUser{
+		Password: "bob",
+	})
+
+	assert.EqualError(t, err, "Email address required to verify user")
+}
+
+func TestVerifyUserWithoutPassword(t *testing.T) {
+	_, err := Verify(mockUserFinder{}, VerifyUser{
+		Email: "lukemorton.dev@gmail.com",
+	})
+
+	assert.EqualError(t, err, "Password required to verify user")
+}
+
 func TestVerifyUserWithInvalidEmail(t *testing.T) {
 	_, err := Verify(mockUserFinder{err: errors.New("Not found")}, VerifyUser{
 		Email:    "notfound@gmail.com",
