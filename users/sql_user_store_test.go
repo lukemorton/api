@@ -7,7 +7,7 @@ import (
 )
 
 func TestCreateUser(t *testing.T) {
-	users := ConnectUserStore()
+	users := SQLUserStore()
 	users.CreateStore()
 
 	err := users.Create(validUserWithDates("a@gmail.com"))
@@ -16,7 +16,7 @@ func TestCreateUser(t *testing.T) {
 }
 
 func TestAutoIncrementID(t *testing.T) {
-	users := ConnectUserStore()
+	users := SQLUserStore()
 	users.CreateStore()
 
 	users.Create(validUserWithDates("a@gmail.com"))
@@ -25,7 +25,7 @@ func TestAutoIncrementID(t *testing.T) {
 }
 
 func TestUniqueEmail(t *testing.T) {
-	users := ConnectUserStore()
+	users := SQLUserStore()
 	users.CreateStore()
 
 	var err error
@@ -38,7 +38,7 @@ func TestUniqueEmail(t *testing.T) {
 }
 
 func TestCreatePanicOnSQLError(t *testing.T) {
-	users := ConnectUserStore()
+	users := SQLUserStore()
 	users.CreateStore()
 	users.createQuery = "hmm"
 
@@ -48,7 +48,7 @@ func TestCreatePanicOnSQLError(t *testing.T) {
 }
 
 func TestFindByEmail(t *testing.T) {
-	users := ConnectUserStore()
+	users := SQLUserStore()
 	users.CreateStore()
 	users.Create(validUserWithDates("a@gmail.com"))
 
@@ -57,7 +57,7 @@ func TestFindByEmail(t *testing.T) {
 }
 
 func TestFindByEmailWithUnknownEmail(t *testing.T) {
-	users := ConnectUserStore()
+	users := SQLUserStore()
 	users.CreateStore()
 
 	_, err := users.FindByEmail("a@gmail.com")
@@ -73,14 +73,14 @@ func validUserWithDates(email string) *User {
 	}
 }
 
-func assertUserStored(t *testing.T, db *UserStore) {
+func assertUserStored(t *testing.T, db *sqlUserStore) {
 	user := User{}
 	db.Get(&user, "SELECT email, password_hash FROM users")
 	assert.Equal(t, "a@gmail.com", user.Email)
 	assert.Equal(t, "bob", user.PasswordHash)
 }
 
-func assertIncrementedID(t *testing.T, db *UserStore) {
+func assertIncrementedID(t *testing.T, db *sqlUserStore) {
 	var id []int
 	err := db.Select(&id, "SELECT id FROM users")
 

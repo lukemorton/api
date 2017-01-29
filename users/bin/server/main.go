@@ -10,14 +10,14 @@ func main() {
 }
 
 func HTTP() *gin.Engine {
-	users := users.ConnectUserStore()
+	users := users.SQLUserStore()
 	users.CreateStore()
 	app := app{users}
 	return app.Engine()
 }
 
 type app struct {
-	Store *users.UserStore
+	Store users.UserStore
 }
 
 func (app *app) Engine() *gin.Engine {
