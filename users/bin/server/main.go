@@ -35,7 +35,19 @@ func (app *App) Engine() *gin.Engine {
 		if err == nil {
 			c.JSON(200, user)
 		} else {
-			c.JSON(500, gin.H{"error": err.Error()})
+			c.JSON(422, gin.H{"error": err.Error()})
+		}
+	})
+
+	e.POST("/verify.json", func(c *gin.Context) {
+		var v users.VerifyUser
+		c.BindJSON(&v)
+		user, err := users.Verify(app.Store, v)
+
+		if err == nil {
+			c.JSON(200, user)
+		} else {
+			c.JSON(401, gin.H{"error": err.Error()})
 		}
 	})
 

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"github.com/lukemorton/api/users"
 	"github.com/stretchr/testify/assert"
+	"gopkg.in/gin-gonic/gin.v1"
 	"io"
 	"log"
 	"net/http"
@@ -28,6 +29,31 @@ func TestRegister(t *testing.T) {
 	assert.Equal(t, "lukemorton.dev@gmail.com", user.Email, "includes email")
 }
 
+func TestVerify(t *testing.T) {
+	app := testApp()
+
+	app.POST("/register.json", h{
+		"email":    "lukemorton.dev@gmail.com",
+		"password": "bob",
+	})
+
+	w := app.POST("/verify.json", h{
+		"email":    "lukemorton.dev@gmail.com",
+		"password": "bob",
+	})
+	user := userFromResponse(w)
+	assert.Equal(t, w.Code, 200, "status should be 200")
+	assert.Equal(t, int64(1), user.Id, "includes ID")
+}
+
+func TestVerifyError(t *testing.T) {
+	w := POST("/verify.json", h{
+		"email":    "lukemorton.dev@gmail.com",
+		"password": "bob",
+	})
+	assert.Equal(t, w.Code, 401, "status should be 200")
+}
+
 func TestBadRequest(t *testing.T) {
 	var w *httptest.ResponseRecorder
 
@@ -41,21 +67,37 @@ func TestBadRequest(t *testing.T) {
 	assert.Equal(t, w.Code, 400, "status should be 400")
 }
 
+type testAppAgent struct {
+	engine *gin.Engine
+}
+
 func GET(path string) *httptest.ResponseRecorder {
-	return request("GET", path, nil)
+	return testApp().GET(path)
 }
 
 func POST(path string, body interface{}) *httptest.ResponseRecorder {
+	return testApp().POST(path, body)
+}
+
+func testApp() testAppAgent {
+	return testAppAgent{AppEngine()}
+}
+
+func (app testAppAgent) GET(path string) *httptest.ResponseRecorder {
+	return app.request("GET", path, nil)
+}
+
+func (app testAppAgent) POST(path string, body interface{}) *httptest.ResponseRecorder {
 	jsonBody, _ := json.Marshal(body)
-	return request("POST", path, bytes.NewBuffer(jsonBody))
+	return app.request("POST", path, bytes.NewBuffer(jsonBody))
 }
 
 type h map[string]interface{}
 
-func request(method string, path string, body io.Reader) *httptest.ResponseRecorder {
+func (app testAppAgent) request(method string, path string, body io.Reader) *httptest.ResponseRecorder {
 	r, _ := http.NewRequest(method, path, body)
 	w := httptest.NewRecorder()
-	AppEngine().ServeHTTP(w, r)
+	app.engine.ServeHTTP(w, r)
 	return w
 }
 
