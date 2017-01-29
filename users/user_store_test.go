@@ -52,8 +52,16 @@ func TestFindByEmail(t *testing.T) {
 	users.CreateStore()
 	users.Create(validUserWithDates("a@gmail.com"))
 
-	user := users.FindByEmail("a@gmail.com")
+	user, _ := users.FindByEmail("a@gmail.com")
 	assert.Equal(t, "a@gmail.com", user.Email)
+}
+
+func TestFindByEmailWithUnknownEmail(t *testing.T) {
+	users := ConnectUserStore()
+	users.CreateStore()
+
+	_, err := users.FindByEmail("a@gmail.com")
+	assert.EqualError(t, err, "Email not recognised")
 }
 
 func validUserWithDates(email string) *User {

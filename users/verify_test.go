@@ -1,12 +1,13 @@
 package users
 
 import (
+	"errors"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestVerifyValidUser(t *testing.T) {
-	user, err := Verify(mockUserFinder{registeredUserForVerification()}, VerifyUser{
+	user, err := Verify(mockUserFinder{user: registeredUserForVerification()}, VerifyUser{
 		Email:    "lukemorton.dev@gmail.com",
 		Password: "password",
 	})
@@ -15,8 +16,17 @@ func TestVerifyValidUser(t *testing.T) {
 	assert.NotNil(t, user.PasswordHash)
 }
 
+func TestVerifyUserWithInvalidEmail(t *testing.T) {
+	_, err := Verify(mockUserFinder{err: errors.New("Not found")}, VerifyUser{
+		Email:    "notfound@gmail.com",
+		Password: "password",
+	})
+
+	assert.EqualError(t, err, "Not found")
+}
+
 func TestVerifyUserWithInvalidPassword(t *testing.T) {
-	_, err := Verify(mockUserFinder{registeredUserForVerification()}, VerifyUser{
+	_, err := Verify(mockUserFinder{user: registeredUserForVerification()}, VerifyUser{
 		Email:    "lukemorton.dev@gmail.com",
 		Password: "not valid",
 	})
@@ -35,8 +45,9 @@ func registeredUserForVerification() User {
 
 type mockUserFinder struct {
 	user User
+	err error
 }
 
-func (users mockUserFinder) FindByEmail(email string) User {
-	return users.user
+func (users mockUserFinder) FindByEmail(email string) (User, error) {
+	return users.user, users.err
 }

@@ -54,7 +54,7 @@ type UserCreator interface {
 }
 
 type UserFinder interface {
-	FindByEmail(email string) User
+	FindByEmail(email string) (User, error)
 }
 
 func (db *UserStore) Create(user *User) error {
@@ -78,13 +78,13 @@ func (db *UserStore) Create(user *User) error {
 	return nil
 }
 
-func (db *UserStore) FindByEmail(email string) User {
+func (db *UserStore) FindByEmail(email string) (User, error) {
 	user := User{}
 	err := db.Get(&user, db.findByEmailQuery, email)
 
 	if err != nil {
-		panic(err)
+		return user, errors.New("Email not recognised")
 	}
 
-	return user
+	return user, nil
 }

@@ -17,7 +17,12 @@ func Verify(users UserFinder, v VerifyUser) (User, error) {
 		return User{}, err
 	}
 
-	user := users.FindByEmail(v.Email)
+	user, err := users.FindByEmail(v.Email)
+
+	if err != nil {
+		return User{}, err
+	}
+
 	err = verifyPassword(user.PasswordHash, v.Password)
 	return user, err
 }
