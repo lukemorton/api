@@ -67,10 +67,6 @@ func TestBadRequest(t *testing.T) {
 	assert.Equal(t, w.Code, 400, "status should be 400")
 }
 
-type testAppAgent struct {
-	engine *gin.Engine
-}
-
 func GET(path string) *httptest.ResponseRecorder {
 	return testApp().GET(path)
 }
@@ -80,7 +76,11 @@ func POST(path string, body interface{}) *httptest.ResponseRecorder {
 }
 
 func testApp() testAppAgent {
-	return testAppAgent{AppEngine()}
+	return testAppAgent{HTTP()}
+}
+
+type testAppAgent struct {
+	engine *gin.Engine
 }
 
 func (app testAppAgent) GET(path string) *httptest.ResponseRecorder {

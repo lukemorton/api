@@ -6,28 +6,28 @@ import (
 )
 
 func main() {
-	AppEngine().Run(":3000")
+	HTTP().Run(":3000")
 }
 
-func AppEngine() *gin.Engine {
+func HTTP() *gin.Engine {
 	users := users.ConnectUserStore()
 	users.CreateStore()
-	a := App{users}
-	return a.Engine()
+	app := app{users}
+	return app.Engine()
 }
 
-type App struct {
+type app struct {
 	Store *users.UserStore
 }
 
-func (app *App) Engine() *gin.Engine {
-	e := gin.Default()
+func (app *app) Engine() *gin.Engine {
+	http := gin.Default()
 
-	e.GET("/status.json", func(c *gin.Context) {
+	http.GET("/status.json", func(c *gin.Context) {
 		c.JSON(200, gin.H{"status": "good"})
 	})
 
-	e.POST("/register.json", func(c *gin.Context) {
+	http.POST("/register.json", func(c *gin.Context) {
 		var r users.RegisterUser
 		c.BindJSON(&r)
 		user, err := users.Register(app.Store, r)
@@ -39,7 +39,7 @@ func (app *App) Engine() *gin.Engine {
 		}
 	})
 
-	e.POST("/verify.json", func(c *gin.Context) {
+	http.POST("/verify.json", func(c *gin.Context) {
 		var v users.VerifyUser
 		c.BindJSON(&v)
 		user, err := users.Verify(app.Store, v)
@@ -51,9 +51,9 @@ func (app *App) Engine() *gin.Engine {
 		}
 	})
 
-	e.NoRoute(func(c *gin.Context) {
+	http.NoRoute(func(c *gin.Context) {
 		c.JSON(400, gin.H{"error": "Bad request, check the docs."})
 	})
 
-	return e
+	return http
 }
