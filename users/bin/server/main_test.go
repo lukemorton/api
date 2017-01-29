@@ -54,6 +54,20 @@ func TestVerifyError(t *testing.T) {
 	assert.Equal(t, w.Code, 401, "status should be 200")
 }
 
+func TestResetPassword(t *testing.T) {
+	app := testApp()
+
+	app.POST("/register.json", h{
+		"email":    "lukemorton.dev@gmail.com",
+		"password": "bob",
+	})
+
+	w := app.POST("/password/reset.json", h{
+		"email": "lukemorton.dev@gmail.com",
+	})
+	assert.Equal(t, w.Code, 200, "status should be 200")
+}
+
 func TestBadRequest(t *testing.T) {
 	var w *httptest.ResponseRecorder
 

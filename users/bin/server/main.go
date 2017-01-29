@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/lukemorton/api/users"
 	"gopkg.in/gin-gonic/gin.v1"
+	"log"
 )
 
 func main() {
@@ -46,6 +47,19 @@ func (app *app) Engine() *gin.Engine {
 
 		if err == nil {
 			c.JSON(200, user)
+		} else {
+			c.JSON(401, gin.H{"error": err.Error()})
+		}
+	})
+
+	http.POST("/password/reset.json", func(c *gin.Context) {
+		var r users.ResetPasswordUser
+		c.BindJSON(&r)
+		token, err := users.ResetPassword(app.Store, r)
+
+		if err == nil {
+			log.Println(gin.H{"token": token})
+			c.JSON(200, gin.H{"message": "Reset token has been sent to your email address"})
 		} else {
 			c.JSON(401, gin.H{"error": err.Error()})
 		}
