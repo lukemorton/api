@@ -29,6 +29,13 @@ func TestRegister(t *testing.T) {
 	assert.Equal(t, "lukemorton.dev@gmail.com", user.Email, "includes email")
 }
 
+func TestRegisterError(t *testing.T) {
+	w := POST("/register.json", h{
+		"email": "lukemorton.dev@gmail.com",
+	})
+	assert.Equal(t, w.Code, 422, "status should be 422")
+}
+
 func TestVerify(t *testing.T) {
 	app := testApp()
 
