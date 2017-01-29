@@ -11,7 +11,7 @@ type ResetPasswordUser struct {
 	Email string `json:"email"`
 }
 
-func ResetPassword(users UserUpdater, r ResetPasswordUser) (string, error) {
+func ResetPassword(users UserPasswordResetter, r ResetPasswordUser) (string, error) {
 	err := validateResetPasswordUser(r)
 
 	if err != nil {

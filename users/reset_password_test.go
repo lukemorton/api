@@ -7,7 +7,7 @@ import (
 )
 
 func TestResetPassword(t *testing.T) {
-	token, err := ResetPassword(mockUserUpdater{}, ResetPasswordUser{
+	token, err := ResetPassword(mockUserPasswordResetter{}, ResetPasswordUser{
 		Email: "lukemorton.dev@gmail.com",
 	})
 
@@ -16,24 +16,24 @@ func TestResetPassword(t *testing.T) {
 }
 
 func TestResetPasswordWithMissingEmail(t *testing.T) {
-	token, err := ResetPassword(mockUserUpdater{}, ResetPasswordUser{})
+	token, err := ResetPassword(mockUserPasswordResetter{}, ResetPasswordUser{})
 
 	assert.Empty(t, token)
 	assert.EqualError(t, err, "Email address required to reset password")
 }
 
 func TestResetPasswordWithInvalidEmail(t *testing.T) {
-	_, err := ResetPassword(mockUserUpdater{errors.New("Email not found")}, ResetPasswordUser{
+	_, err := ResetPassword(mockUserPasswordResetter{errors.New("Email not found")}, ResetPasswordUser{
 		Email: "lukemorton.dev@gmail.com",
 	})
 
 	assert.EqualError(t, err, "Email not found")
 }
 
-type mockUserUpdater struct {
+type mockUserPasswordResetter struct {
 	err error
 }
 
-func (users mockUserUpdater) UpdateResetTokenHashByEmail(email string, token string) error {
+func (users mockUserPasswordResetter) UpdateResetTokenHashByEmail(email string, token string) error {
 	return users.err
 }
