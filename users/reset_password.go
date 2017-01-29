@@ -1,10 +1,10 @@
 package users
 
 import (
+	"crypto/rand"
 	"errors"
 	"fmt"
 	"golang.org/x/crypto/bcrypt"
-	"crypto/rand"
 )
 
 type ResetPasswordUser struct {

@@ -49,9 +49,9 @@ func SQLUserStore() *sqlUserStore {
 
 type sqlUserStore struct {
 	*sqlx.DB
-	createQuery string
+	createQuery                      string
 	updateResetTokenHashByEmailQuery string
-	findByEmailQuery string
+	findByEmailQuery                 string
 }
 
 func (db *sqlUserStore) CreateStore() {

@@ -61,7 +61,7 @@ func registeredUserForVerification() User {
 
 type mockUserFinder struct {
 	user User
-	err error
+	err  error
 }
 
 func (users mockUserFinder) FindByEmail(email string) (User, error) {

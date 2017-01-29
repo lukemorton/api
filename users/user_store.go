@@ -3,7 +3,7 @@ package users
 type UserStore interface {
 	CreateStore()
 	UserCreator
-  UserUpdater
+	UserUpdater
 	UserFinder
 }
 
@@ -12,7 +12,7 @@ type UserCreator interface {
 }
 
 type UserUpdater interface {
-  UpdateResetTokenHashByEmail(email string, token string) error
+	UpdateResetTokenHashByEmail(email string, token string) error
 }
 
 type UserFinder interface {
