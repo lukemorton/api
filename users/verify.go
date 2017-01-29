@@ -29,9 +29,9 @@ func Verify(users UserFinder, v VerifyUser) (User, error) {
 
 func validateVerifyUser(user VerifyUser) error {
 	if user.Email == "" {
-		return errors.New("User requires email address")
+		return errors.New("Email address required to verify user")
 	} else if user.Password == "" {
-		return errors.New("User requires password")
+		return errors.New("Password required to verify user")
 	} else {
 		return nil
 	}
