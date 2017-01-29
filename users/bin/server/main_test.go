@@ -51,7 +51,7 @@ func TestVerifyError(t *testing.T) {
 		"email":    "lukemorton.dev@gmail.com",
 		"password": "bob",
 	})
-	assert.Equal(t, w.Code, 401, "status should be 200")
+	assert.Equal(t, w.Code, 401, "status should be 401")
 }
 
 func TestResetPassword(t *testing.T) {
