@@ -2,7 +2,6 @@ package users
 
 import (
 	"errors"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type VerifyUser struct {
@@ -23,8 +22,7 @@ func Verify(users UserFinder, v VerifyUser) (User, error) {
 		return User{}, err
 	}
 
-	err = verifyPassword(user.PasswordHash, v.Password)
-	return user, err
+	return user, user.VerifyPassword(v.Password)
 }
 
 func validateVerifyUser(user VerifyUser) error {
@@ -35,14 +33,4 @@ func validateVerifyUser(user VerifyUser) error {
 	} else {
 		return nil
 	}
-}
-
-func verifyPassword(passwordHash string, password string) error {
-	err := bcrypt.CompareHashAndPassword([]byte(passwordHash), []byte(password))
-
-	if err != nil {
-		return errors.New("Invalid password")
-	}
-
-	return nil
 }
