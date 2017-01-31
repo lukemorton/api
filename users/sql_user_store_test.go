@@ -47,7 +47,7 @@ func TestCreatePanicOnSQLError(t *testing.T) {
 	})
 }
 
-func TestUpdateFieldByEmail(t *testing.T) {
+func TestUpdateResetTokenHash(t *testing.T) {
 	users := SQLUserStore()
 	users.CreateStore()
 	user := validUserWithDates("a@gmail.com")
