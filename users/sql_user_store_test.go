@@ -7,26 +7,21 @@ import (
 )
 
 func TestCreateUser(t *testing.T) {
-	users := SQLUserStore()
-	users.CreateStore()
-
+	users := store()
 	err := users.Create(validUserWithDates("a@gmail.com"))
 	assert.Nil(t, err)
 	assertUserStored(t, users)
 }
 
 func TestAutoIncrementID(t *testing.T) {
-	users := SQLUserStore()
-	users.CreateStore()
-
+	users := store()
 	users.Create(validUserWithDates("a@gmail.com"))
 	users.Create(validUserWithDates("b@gmail.com"))
 	assertIncrementedID(t, users)
 }
 
 func TestUniqueEmail(t *testing.T) {
-	users := SQLUserStore()
-	users.CreateStore()
+	users := store()
 
 	var err error
 
@@ -38,8 +33,7 @@ func TestUniqueEmail(t *testing.T) {
 }
 
 func TestCreatePanicOnSQLError(t *testing.T) {
-	users := SQLUserStore()
-	users.CreateStore()
+	users := store()
 	users.createQuery = "hmm"
 
 	assert.Panics(t, func() {
@@ -48,55 +42,35 @@ func TestCreatePanicOnSQLError(t *testing.T) {
 }
 
 func TestUpdateResetTokenHash(t *testing.T) {
-	users := SQLUserStore()
-	users.CreateStore()
-	user := validUserWithDates("a@gmail.com")
-	users.Create(user)
-
+	users, user := storeAndUser()
 	user.ResetTokenHash = "bob"
-	users.UpdateResetTokenHash(user)
+	users.UpdateResetTokenHash(&user)
 	assertResetPasswordTokenChanged(t, users)
 }
 
 func TestUpdateResetTokenHashUpdatesUpdatedAt(t *testing.T) {
-	users := SQLUserStore()
-	users.CreateStore()
-	user := validUserWithDates("a@gmail.com")
-	users.Create(user)
-
+	users, user := storeAndUser()
 	prevUpdatedAt := user.UpdatedAt
-	users.UpdateResetTokenHash(user)
+	users.UpdateResetTokenHash(&user)
 	assert.NotEqual(t, prevUpdatedAt, user.UpdatedAt)
 }
 
 func TestUpdatePasswordHash(t *testing.T) {
-	users := SQLUserStore()
-	users.CreateStore()
-	user := validUserWithDates("a@gmail.com")
-	users.Create(user)
-
+	users, user := storeAndUser()
 	user.PasswordHash = "bob"
-	users.UpdatePasswordHash(user)
+	users.UpdatePasswordHash(&user)
 	assertPasswordHashChanged(t, users)
 }
 
 func TestUpdatePasswordHashUpdatesUpdatedAt(t *testing.T) {
-	users := SQLUserStore()
-	users.CreateStore()
-	user := validUserWithDates("a@gmail.com")
-	users.Create(user)
-
+	users, user := storeAndUser()
 	prevUpdatedAt := user.UpdatedAt
-	users.UpdatePasswordHash(user)
-
+	users.UpdatePasswordHash(&user)
 	assert.NotEqual(t, prevUpdatedAt, user.UpdatedAt)
 }
 
 func TestFindByEmail(t *testing.T) {
-	users := SQLUserStore()
-	users.CreateStore()
-	users.Create(validUserWithDates("a@gmail.com"))
-
+	users, _ := storeAndUser()
 	user, err := users.FindByEmail("a@gmail.com")
 	assert.Nil(t, err)
 	assert.Equal(t, "a@gmail.com", user.Email)
@@ -108,6 +82,19 @@ func TestFindByEmailWithUnknownEmail(t *testing.T) {
 
 	_, err := users.FindByEmail("a@gmail.com")
 	assert.EqualError(t, err, "Email not recognised")
+}
+
+func store() *sqlUserStore {
+	users := SQLUserStore()
+	users.CreateStore()
+	return users
+}
+
+func storeAndUser() (*sqlUserStore, User) {
+	users := store()
+	user := validUserWithDates("a@gmail.com")
+	users.Create(user)
+	return users, *user
 }
 
 func validUserWithDates(email string) *User {
