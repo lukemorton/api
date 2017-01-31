@@ -101,9 +101,11 @@ func validUserWithDates(email string) *User {
 
 func assertUserStored(t *testing.T, db *sqlUserStore) {
 	user := User{}
-	db.Get(&user, "SELECT email, password_hash FROM users")
+	db.Get(&user, "SELECT email, password_hash, created_at, updated_at FROM users")
 	assert.Equal(t, "a@gmail.com", user.Email)
 	assert.Equal(t, "bob", user.PasswordHash)
+	assert.NotEmpty(t, user.CreatedAt)
+	assert.NotEmpty(t, user.UpdatedAt)
 }
 
 func assertIncrementedID(t *testing.T, db *sqlUserStore) {

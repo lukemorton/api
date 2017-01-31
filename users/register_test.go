@@ -13,10 +13,8 @@ func TestRegisterValidUser(t *testing.T) {
 	})
 
 	assert.Nil(t, err)
-	assert.NotNil(t, user.Id)
-	assert.NotNil(t, user.CreatedAt)
-	assert.NotNil(t, user.UpdatedAt)
-	assert.NotNil(t, user.PasswordHash)
+	assert.NotEmpty(t, user.Email)
+	assert.NotEmpty(t, user.PasswordHash)
 }
 
 func TestRegisterUserWithoutEmail(t *testing.T) {

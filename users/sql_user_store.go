@@ -60,6 +60,8 @@ func (db *sqlUserStore) CreateStore() {
 }
 
 func (db *sqlUserStore) Create(user *User) error {
+	user.CreatedAt = time.Now()
+	user.UpdatedAt = time.Now()
 	result, err := db.NamedExec(db.createQuery, *user)
 
 	if err != nil {

@@ -2,7 +2,6 @@ package users
 
 import (
 	"errors"
-	"time"
 )
 
 type RegisterUser struct {
@@ -17,11 +16,7 @@ func Register(users UserCreator, r RegisterUser) (User, error) {
 		return User{}, err
 	}
 
-	user := User{
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
-		Email:     r.Email,
-	}
+	user := User{Email: r.Email}
 	user.SetPassword(r.Password)
 
 	err = users.Create(&user)
