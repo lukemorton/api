@@ -4,8 +4,8 @@ type UserStore interface {
 	CreateStore()
 	UserCreator
 	UserFinder
-	UpdateResetTokenHash(user *User) error
-	UpdatePasswordHash(user *User) error
+	UpdateResetTokenHash(user *User)
+	UpdatePasswordHash(user *User)
 }
 
 type UserCreator interface {
@@ -18,10 +18,10 @@ type UserFinder interface {
 
 type UserPasswordResetter interface {
 	UserFinder
-	UpdateResetTokenHash(user *User) error
+	UpdateResetTokenHash(user *User)
 }
 
 type UserPasswordUpdater interface {
 	UserFinder
-	UpdatePasswordHash(user *User) error
+	UpdatePasswordHash(user *User)
 }

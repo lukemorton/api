@@ -22,7 +22,8 @@ func ResetPassword(users UserPasswordResetter, r ResetPasswordUser) (string, err
 	}
 
 	token := user.GenerateResetToken()
-	return token, users.UpdateResetTokenHash(&user)
+	users.UpdateResetTokenHash(&user)
+	return token, nil
 }
 
 func validateResetPasswordUser(user ResetPasswordUser) error {

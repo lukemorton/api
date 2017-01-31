@@ -54,9 +54,7 @@ func TestUpdateResetTokenHash(t *testing.T) {
 	users.Create(user)
 
 	user.ResetTokenHash = "bob"
-	err := users.UpdateResetTokenHash(user)
-
-	assert.Nil(t, err)
+	users.UpdateResetTokenHash(user)
 	assertResetPasswordTokenChanged(t, users)
 }
 
@@ -68,7 +66,6 @@ func TestUpdateResetTokenHashUpdatesUpdatedAt(t *testing.T) {
 
 	prevUpdatedAt := user.UpdatedAt
 	users.UpdateResetTokenHash(user)
-
 	assert.NotEqual(t, prevUpdatedAt, user.UpdatedAt)
 }
 
@@ -79,9 +76,7 @@ func TestUpdatePasswordHash(t *testing.T) {
 	users.Create(user)
 
 	user.PasswordHash = "bob"
-	err := users.UpdatePasswordHash(user)
-
-	assert.Nil(t, err)
+	users.UpdatePasswordHash(user)
 	assertPasswordHashChanged(t, users)
 }
 

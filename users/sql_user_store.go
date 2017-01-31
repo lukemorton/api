@@ -87,36 +87,12 @@ func (db *sqlUserStore) Create(user *User) error {
 	return nil
 }
 
-func (db *sqlUserStore) UpdateResetTokenHash(user *User) error {
-	user.UpdatedAt = time.Now()
-	result := db.MustExec(db.updateResetTokenHashByIdQuery, user.ResetTokenHash, user.UpdatedAt, user.Id)
-	rows, err := result.RowsAffected()
-
-	if err != nil {
-		panic(err)
-	}
-
-	if rows == 0 {
-		panic(user)
-	}
-
-	return nil
+func (db *sqlUserStore) UpdateResetTokenHash(user *User) {
+	db.updateField(user, db.updateResetTokenHashByIdQuery, user.ResetTokenHash)
 }
 
-func (db *sqlUserStore) UpdatePasswordHash(user *User) error {
-	user.UpdatedAt = time.Now()
-	result := db.MustExec(db.updatePasswordHashByIdQuery, user.PasswordHash, user.UpdatedAt, user.Id)
-	rows, err := result.RowsAffected()
-
-	if err != nil {
-		panic(err)
-	}
-
-	if rows == 0 {
-		panic(user)
-	}
-
-	return nil
+func (db *sqlUserStore) UpdatePasswordHash(user *User) {
+	db.updateField(user, db.updatePasswordHashByIdQuery, user.PasswordHash)
 }
 
 func (db *sqlUserStore) FindByEmail(email string) (User, error) {
@@ -132,4 +108,18 @@ func (db *sqlUserStore) FindByEmail(email string) (User, error) {
 	}
 
 	return user, nil
+}
+
+func (db *sqlUserStore) updateField(user *User, query string, value interface{}) {
+	user.UpdatedAt = time.Now()
+	result := db.MustExec(query, value, user.UpdatedAt, user.Id)
+	rows, err := result.RowsAffected()
+
+	if err != nil {
+		panic(err)
+	}
+
+	if rows == 0 {
+		panic(user)
+	}
 }

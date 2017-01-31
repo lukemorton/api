@@ -30,14 +30,6 @@ func TestResetPasswordWithInvalidEmail(t *testing.T) {
 	assert.EqualError(t, err, "Email not found")
 }
 
-func TestResetPasswordWithWeirdIssue(t *testing.T) {
-	_, err := ResetPassword(mockUpdateErr("Weird issue"), ResetPasswordUser{
-		Email: "lukemorton.dev@gmail.com",
-	})
-
-	assert.EqualError(t, err, "Weird issue")
-}
-
 func mockFindUser() mockUserPasswordResetter {
 	return mockUserPasswordResetter{
 		findUser: User{},
@@ -50,22 +42,14 @@ func mockFindErr(err string) mockUserPasswordResetter {
 	}
 }
 
-func mockUpdateErr(err string) mockUserPasswordResetter {
-	return mockUserPasswordResetter{
-		updateErr: errors.New(err),
-	}
-}
-
 type mockUserPasswordResetter struct {
 	findUser User
 	findErr error
-	updateErr error
 }
 
 func (users mockUserPasswordResetter) FindByEmail(email string) (User, error) {
 	return users.findUser, users.findErr
 }
 
-func (users mockUserPasswordResetter) UpdateResetTokenHash(user *User) error {
-	return users.updateErr
+func (users mockUserPasswordResetter) UpdateResetTokenHash(user *User) {
 }
