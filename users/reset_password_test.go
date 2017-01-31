@@ -44,7 +44,7 @@ func mockFindErr(err string) mockUserPasswordResetter {
 
 type mockUserPasswordResetter struct {
 	findUser User
-	findErr error
+	findErr  error
 }
 
 func (users mockUserPasswordResetter) FindByEmail(email string) (User, error) {
