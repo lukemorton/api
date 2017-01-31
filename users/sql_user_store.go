@@ -28,6 +28,9 @@ const (
 	defaultUpdateResetTokenHashByIdQuery = `
 		UPDATE users SET reset_token_hash = ?, updated_at = ? WHERE id = ?
 	`
+	defaultUpdatePasswordHashByIdQuery = `
+		UPDATE users SET password_hash = ?, updated_at = ? WHERE id = ?
+	`
 	defaultFindByEmailQuery = `
 		SELECT * FROM users WHERE email = ?
 	`
@@ -44,6 +47,7 @@ func SQLUserStore() *sqlUserStore {
 		db,
 		defaultCreateQuery,
 		defaultUpdateResetTokenHashByIdQuery,
+		defaultUpdatePasswordHashByIdQuery,
 		defaultFindByEmailQuery,
 	}
 }
@@ -52,6 +56,7 @@ type sqlUserStore struct {
 	*sqlx.DB
 	createQuery                   string
 	updateResetTokenHashByIdQuery string
+	updatePasswordHashByIdQuery       string
 	findByEmailQuery               string
 }
 
@@ -85,6 +90,22 @@ func (db *sqlUserStore) Create(user *User) error {
 func (db *sqlUserStore) UpdateResetTokenHash(user *User) error {
 	user.UpdatedAt = time.Now()
 	result := db.MustExec(db.updateResetTokenHashByIdQuery, user.ResetTokenHash, user.UpdatedAt, user.Id)
+	rows, err := result.RowsAffected()
+
+	if err != nil {
+		panic(err)
+	}
+
+	if rows == 0 {
+		panic(user)
+	}
+
+	return nil
+}
+
+func (db *sqlUserStore) UpdatePasswordHash(user *User) error {
+	user.UpdatedAt = time.Now()
+	result := db.MustExec(db.updatePasswordHashByIdQuery, user.PasswordHash, user.UpdatedAt, user.Id)
 	rows, err := result.RowsAffected()
 
 	if err != nil {

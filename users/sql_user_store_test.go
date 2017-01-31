@@ -72,6 +72,31 @@ func TestUpdateResetTokenHashUpdatesUpdatedAt(t *testing.T) {
 	assert.NotEqual(t, prevUpdatedAt, user.UpdatedAt)
 }
 
+func TestUpdatePasswordHash(t *testing.T) {
+	users := SQLUserStore()
+	users.CreateStore()
+	user := validUserWithDates("a@gmail.com")
+	users.Create(user)
+
+	user.PasswordHash = "bob"
+	err := users.UpdatePasswordHash(user)
+
+	assert.Nil(t, err)
+	assertPasswordHashChanged(t, users)
+}
+
+func TestUpdatePasswordHashUpdatesUpdatedAt(t *testing.T) {
+	users := SQLUserStore()
+	users.CreateStore()
+	user := validUserWithDates("a@gmail.com")
+	users.Create(user)
+
+	prevUpdatedAt := user.UpdatedAt
+	users.UpdatePasswordHash(user)
+
+	assert.NotEqual(t, prevUpdatedAt, user.UpdatedAt)
+}
+
 func TestFindByEmail(t *testing.T) {
 	users := SQLUserStore()
 	users.CreateStore()
@@ -124,5 +149,11 @@ func assertIncrementedID(t *testing.T, db *sqlUserStore) {
 func assertResetPasswordTokenChanged(t *testing.T, db *sqlUserStore) {
 	var token string
 	db.Get(&token, "SELECT reset_token_hash FROM users")
+	assert.Equal(t, "bob", token)
+}
+
+func assertPasswordHashChanged(t *testing.T, db *sqlUserStore) {
+	var token string
+	db.Get(&token, "SELECT password_hash FROM users")
 	assert.Equal(t, "bob", token)
 }

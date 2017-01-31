@@ -5,6 +5,7 @@ type UserStore interface {
 	UserCreator
 	UserFinder
 	UpdateResetTokenHash(user *User) error
+	UpdatePasswordHash(user *User) error
 }
 
 type UserCreator interface {
@@ -20,4 +21,7 @@ type UserPasswordResetter interface {
 	UpdateResetTokenHash(user *User) error
 }
 
+type UserPasswordUpdater interface {
+	UserFinder
+	UpdatePasswordHash(user *User) error
 }
