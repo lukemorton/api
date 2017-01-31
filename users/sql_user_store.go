@@ -5,6 +5,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
+	"time"
 )
 
 const (
@@ -15,7 +16,7 @@ const (
 			updated_at DATETIME,
 			email VARCHAR UNIQUE,
 			password_hash VARCHAR,
-			reset_token_hash VARCHAR NOT NULL
+			reset_token_hash VARCHAR
 		);
 	`
 	defaultCreateQuery = `
@@ -25,7 +26,7 @@ const (
 			(:created_at, :updated_at, :email, :password_hash, "")
 	`
 	defaultUpdateResetTokenHashByIdQuery = `
-		UPDATE users SET reset_token_hash = ? WHERE id = ?
+		UPDATE users SET reset_token_hash = ?, updated_at = ? WHERE id = ?
 	`
 	defaultFindByEmailQuery = `
 		SELECT * FROM users WHERE email = ?
@@ -80,7 +81,8 @@ func (db *sqlUserStore) Create(user *User) error {
 }
 
 func (db *sqlUserStore) UpdateResetTokenHash(user *User) error {
-	result := db.MustExec(db.updateResetTokenHashByIdQuery, user.ResetTokenHash, user.Id)
+	user.UpdatedAt = time.Now()
+	result := db.MustExec(db.updateResetTokenHashByIdQuery, user.ResetTokenHash, user.UpdatedAt, user.Id)
 	rows, err := result.RowsAffected()
 
 	if err != nil {

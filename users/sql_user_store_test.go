@@ -60,6 +60,18 @@ func TestUpdateResetTokenHash(t *testing.T) {
 	assertResetPasswordTokenChanged(t, users)
 }
 
+func TestUpdateResetTokenHashUpdatesUpdatedAt(t *testing.T) {
+	users := SQLUserStore()
+	users.CreateStore()
+	user := validUserWithDates("a@gmail.com")
+	users.Create(user)
+
+	prevUpdatedAt := user.UpdatedAt
+	users.UpdateResetTokenHash(user)
+
+	assert.NotEqual(t, prevUpdatedAt, user.UpdatedAt)
+}
+
 func TestFindByEmail(t *testing.T) {
 	users := SQLUserStore()
 	users.CreateStore()
