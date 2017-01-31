@@ -29,6 +29,12 @@ func (user *User) VerifyPassword(password string) error {
 	}
 }
 
+func (user *User) GenerateResetToken() string {
+	token := generateToken()
+	user.ResetTokenHash = hash(token)
+	return token
+}
+
 func hash(s string) string {
 	h, err := bcrypt.GenerateFromPassword([]byte(s), 10)
 
@@ -42,4 +48,10 @@ func hash(s string) string {
 func verifyHash(h string, s string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(h), []byte(s))
 	return err == nil
+}
+
+func generateToken() string {
+	b := make([]byte, 8)
+	rand.Read(b)
+	return fmt.Sprintf("%x", b)
 }

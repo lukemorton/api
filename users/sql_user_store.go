@@ -24,8 +24,8 @@ const (
 	 	VALUES
 			(:created_at, :updated_at, :email, :password_hash, "")
 	`
-	defaultUpdateResetTokenHashByEmailQuery = `
-		UPDATE users SET reset_token_hash = ? WHERE email = ?
+	defaultUpdateResetTokenHashByIdQuery = `
+		UPDATE users SET reset_token_hash = ? WHERE id = ?
 	`
 	defaultFindByEmailQuery = `
 		SELECT * FROM users WHERE email = ?
@@ -42,16 +42,16 @@ func SQLUserStore() *sqlUserStore {
 	return &sqlUserStore{
 		db,
 		defaultCreateQuery,
-		defaultUpdateResetTokenHashByEmailQuery,
+		defaultUpdateResetTokenHashByIdQuery,
 		defaultFindByEmailQuery,
 	}
 }
 
 type sqlUserStore struct {
 	*sqlx.DB
-	createQuery                      string
-	updateResetTokenHashByEmailQuery string
-	findByEmailQuery                 string
+	createQuery                   string
+	updateResetTokenHashByIdQuery string
+	findByEmailQuery               string
 }
 
 func (db *sqlUserStore) CreateStore() {
@@ -79,8 +79,8 @@ func (db *sqlUserStore) Create(user *User) error {
 	return nil
 }
 
-func (db *sqlUserStore) UpdateResetTokenHashByEmail(email string, token string) error {
-	result := db.MustExec(db.updateResetTokenHashByEmailQuery, token, email)
+func (db *sqlUserStore) UpdateResetTokenHash(user *User) error {
+	result := db.MustExec(db.updateResetTokenHashByIdQuery, user.ResetTokenHash, user.Id)
 	rows, err := result.RowsAffected()
 
 	if err != nil {
@@ -88,7 +88,7 @@ func (db *sqlUserStore) UpdateResetTokenHashByEmail(email string, token string) 
 	}
 
 	if rows == 0 {
-		return errors.New("Email not recognised")
+		panic(user)
 	}
 
 	return nil

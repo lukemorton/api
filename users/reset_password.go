@@ -1,10 +1,7 @@
 package users
 
 import (
-	"crypto/rand"
 	"errors"
-	"fmt"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type ResetPasswordUser struct {
@@ -18,9 +15,14 @@ func ResetPassword(users UserPasswordResetter, r ResetPasswordUser) (string, err
 		return "", err
 	}
 
-	token := generateToken()
-	err = users.UpdateResetTokenHashByEmail(r.Email, tokenHash(token))
-	return token, err
+	user, err := users.FindByEmail(r.Email)
+
+	if err != nil {
+		return "", err
+	}
+
+	token := user.GenerateResetToken()
+	return token, users.UpdateResetTokenHash(&user)
 }
 
 func validateResetPasswordUser(user ResetPasswordUser) error {
@@ -29,20 +31,4 @@ func validateResetPasswordUser(user ResetPasswordUser) error {
 	} else {
 		return nil
 	}
-}
-
-func generateToken() string {
-	b := make([]byte, 8)
-	rand.Read(b)
-	return fmt.Sprintf("%x", b)
-}
-
-func tokenHash(token string) string {
-	tokenHash, err := bcrypt.GenerateFromPassword([]byte(token), 10)
-
-	if err != nil {
-		panic(err)
-	}
-
-	return string(tokenHash)
 }

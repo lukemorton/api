@@ -50,9 +50,12 @@ func TestCreatePanicOnSQLError(t *testing.T) {
 func TestUpdateFieldByEmail(t *testing.T) {
 	users := SQLUserStore()
 	users.CreateStore()
-	users.Create(validUserWithDates("a@gmail.com"))
+	user := validUserWithDates("a@gmail.com")
+	users.Create(user)
 
-	err := users.UpdateResetTokenHashByEmail("a@gmail.com", "bob")
+	user.ResetTokenHash = "bob"
+	err := users.UpdateResetTokenHash(user)
+
 	assert.Nil(t, err)
 	assertResetPasswordTokenChanged(t, users)
 }

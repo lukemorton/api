@@ -7,7 +7,7 @@ import (
 )
 
 func TestResetPassword(t *testing.T) {
-	token, err := ResetPassword(mockUserPasswordResetter{}, ResetPasswordUser{
+	token, err := ResetPassword(mockFindUser(), ResetPasswordUser{
 		Email: "lukemorton.dev@gmail.com",
 	})
 
@@ -16,24 +16,56 @@ func TestResetPassword(t *testing.T) {
 }
 
 func TestResetPasswordWithMissingEmail(t *testing.T) {
-	token, err := ResetPassword(mockUserPasswordResetter{}, ResetPasswordUser{})
+	token, err := ResetPassword(mockFindUser(), ResetPasswordUser{})
 
 	assert.Empty(t, token)
 	assert.EqualError(t, err, "Email address required to reset password")
 }
 
 func TestResetPasswordWithInvalidEmail(t *testing.T) {
-	_, err := ResetPassword(mockUserPasswordResetter{errors.New("Email not found")}, ResetPasswordUser{
+	_, err := ResetPassword(mockFindErr("Email not found"), ResetPasswordUser{
 		Email: "lukemorton.dev@gmail.com",
 	})
 
 	assert.EqualError(t, err, "Email not found")
 }
 
-type mockUserPasswordResetter struct {
-	err error
+func TestResetPasswordWithWeirdIssue(t *testing.T) {
+	_, err := ResetPassword(mockUpdateErr("Weird issue"), ResetPasswordUser{
+		Email: "lukemorton.dev@gmail.com",
+	})
+
+	assert.EqualError(t, err, "Weird issue")
 }
 
-func (users mockUserPasswordResetter) UpdateResetTokenHashByEmail(email string, token string) error {
-	return users.err
+func mockFindUser() mockUserPasswordResetter {
+	return mockUserPasswordResetter{
+		findUser: User{},
+	}
+}
+
+func mockFindErr(err string) mockUserPasswordResetter {
+	return mockUserPasswordResetter{
+		findErr: errors.New(err),
+	}
+}
+
+func mockUpdateErr(err string) mockUserPasswordResetter {
+	return mockUserPasswordResetter{
+		updateErr: errors.New(err),
+	}
+}
+
+type mockUserPasswordResetter struct {
+	findUser User
+	findErr error
+	updateErr error
+}
+
+func (users mockUserPasswordResetter) FindByEmail(email string) (User, error) {
+	return users.findUser, users.findErr
+}
+
+func (users mockUserPasswordResetter) UpdateResetTokenHash(user *User) error {
+	return users.updateErr
 }
