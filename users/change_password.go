@@ -4,30 +4,30 @@ import (
 	"errors"
 )
 
-type ChangePasswordUser struct {
+type ChangePasswordRequest struct {
 	Email       string `json:"email"`
 	Password    string `json:"password"`
 	ResetToken  string `json:"reset_token"`
 	NewPassword string `json:"new_password"`
 }
 
-func ChangePassword(users UserPasswordUpdater, c ChangePasswordUser) (User, error) {
-	err := validateChangePasswordUser(c)
+func ChangePassword(users UserPasswordUpdater, r ChangePasswordRequest) (User, error) {
+	err := validateChangePasswordRequest(r)
 
 	if err != nil {
 		return User{}, err
 	}
 
-	if c.Password != "" {
-		return changePasswordByEmailAndPassword(users, c)
-	} else if c.ResetToken != "" {
-		return changePasswordByEmailAndResetToken(users, c)
+	if r.Password != "" {
+		return changePasswordByEmailAndPassword(users, r)
+	} else if r.ResetToken != "" {
+		return changePasswordByEmailAndResetToken(users, r)
 	} else {
 		panic("Should not be here")
 	}
 }
 
-func validateChangePasswordUser(user ChangePasswordUser) error {
+func validateChangePasswordRequest(user ChangePasswordRequest) error {
 	if user.Email == "" {
 		return errors.New("Email address required to change password")
 	} else if user.Password == "" && user.ResetToken == "" {
@@ -39,36 +39,36 @@ func validateChangePasswordUser(user ChangePasswordUser) error {
 	}
 }
 
-func changePasswordByEmailAndPassword(users UserPasswordUpdater, c ChangePasswordUser) (user User, err error) {
-	user, err = users.FindByEmail(c.Email)
+func changePasswordByEmailAndPassword(users UserPasswordUpdater, r ChangePasswordRequest) (user User, err error) {
+	user, err = users.FindByEmail(r.Email)
 
 	if err != nil {
 		return
 	}
 
-	err = user.VerifyPassword(c.Password)
+	err = user.VerifyPassword(r.Password)
 
 	if err != nil {
 		return
 	}
 
-	return setPassword(users, user, c.NewPassword), nil
+	return setPassword(users, user, r.NewPassword), nil
 }
 
-func changePasswordByEmailAndResetToken(users UserPasswordUpdater, c ChangePasswordUser) (user User, err error) {
-	user, err = users.FindByEmail(c.Email)
+func changePasswordByEmailAndResetToken(users UserPasswordUpdater, r ChangePasswordRequest) (user User, err error) {
+	user, err = users.FindByEmail(r.Email)
 
 	if err != nil {
 		return
 	}
 
-	err = user.VerifyResetToken(c.ResetToken)
+	err = user.VerifyResetToken(r.ResetToken)
 
 	if err != nil {
 		return
 	}
 
-	return setPassword(users, user, c.NewPassword), nil
+	return setPassword(users, user, r.NewPassword), nil
 }
 
 func setPassword(users UserPasswordUpdater, user User, newPassword string) User {

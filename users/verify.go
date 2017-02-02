@@ -4,31 +4,31 @@ import (
 	"errors"
 )
 
-type VerifyUser struct {
+type VerifyRequest struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
 
-func Verify(users UserFinder, v VerifyUser) (User, error) {
-	err := validateVerifyUser(v)
+func Verify(users UserFinder, r VerifyRequest) (User, error) {
+	err := validateVerifyRequest(r)
 
 	if err != nil {
 		return User{}, err
 	}
 
-	user, err := users.FindByEmail(v.Email)
+	user, err := users.FindByEmail(r.Email)
 
 	if err != nil {
 		return User{}, err
 	}
 
-	return user, user.VerifyPassword(v.Password)
+	return user, user.VerifyPassword(r.Password)
 }
 
-func validateVerifyUser(user VerifyUser) error {
-	if user.Email == "" {
+func validateVerifyRequest(r VerifyRequest) error {
+	if r.Email == "" {
 		return errors.New("Email address required to verify user")
-	} else if user.Password == "" {
+	} else if r.Password == "" {
 		return errors.New("Password required to verify user")
 	} else {
 		return nil

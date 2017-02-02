@@ -4,13 +4,13 @@ import (
 	"errors"
 )
 
-type RegisterUser struct {
+type RegisterRequest struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
 
-func Register(users UserCreator, r RegisterUser) (User, error) {
-	err := validateRegisterUser(r)
+func Register(users UserCreator, r RegisterRequest) (User, error) {
+	err := validateRegisterRequest(r)
 
 	if err != nil {
 		return User{}, err
@@ -23,10 +23,10 @@ func Register(users UserCreator, r RegisterUser) (User, error) {
 	return user, err
 }
 
-func validateRegisterUser(user RegisterUser) error {
-	if user.Email == "" {
+func validateRegisterRequest(r RegisterRequest) error {
+	if r.Email == "" {
 		return errors.New("User requires email address")
-	} else if user.Password == "" {
+	} else if r.Password == "" {
 		return errors.New("User requires password")
 	} else {
 		return nil

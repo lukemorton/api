@@ -4,12 +4,12 @@ import (
 	"errors"
 )
 
-type ResetPasswordUser struct {
+type ResetPasswordRequest struct {
 	Email string `json:"email"`
 }
 
-func ResetPassword(users UserPasswordResetter, r ResetPasswordUser) (string, error) {
-	err := validateResetPasswordUser(r)
+func ResetPassword(users UserPasswordResetter, r ResetPasswordRequest) (string, error) {
+	err := validateResetPasswordRequest(r)
 
 	if err != nil {
 		return "", err
@@ -26,8 +26,8 @@ func ResetPassword(users UserPasswordResetter, r ResetPasswordUser) (string, err
 	return token, nil
 }
 
-func validateResetPasswordUser(user ResetPasswordUser) error {
-	if user.Email == "" {
+func validateResetPasswordRequest(r ResetPasswordRequest) error {
+	if r.Email == "" {
 		return errors.New("Email address required to reset password")
 	} else {
 		return nil

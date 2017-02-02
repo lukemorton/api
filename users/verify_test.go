@@ -7,7 +7,7 @@ import (
 )
 
 func TestVerifyValidUser(t *testing.T) {
-	user, err := Verify(mockUserFinder{user: registeredUserForVerification()}, VerifyUser{
+	user, err := Verify(mockUserFinder{user: registeredUserForVerification()}, VerifyRequest{
 		Email:    "lukemorton.dev@gmail.com",
 		Password: "password",
 	})
@@ -17,7 +17,7 @@ func TestVerifyValidUser(t *testing.T) {
 }
 
 func TestVerifyUserWithoutEmail(t *testing.T) {
-	_, err := Verify(mockUserFinder{}, VerifyUser{
+	_, err := Verify(mockUserFinder{}, VerifyRequest{
 		Password: "bob",
 	})
 
@@ -25,7 +25,7 @@ func TestVerifyUserWithoutEmail(t *testing.T) {
 }
 
 func TestVerifyUserWithoutPassword(t *testing.T) {
-	_, err := Verify(mockUserFinder{}, VerifyUser{
+	_, err := Verify(mockUserFinder{}, VerifyRequest{
 		Email: "lukemorton.dev@gmail.com",
 	})
 
@@ -33,7 +33,7 @@ func TestVerifyUserWithoutPassword(t *testing.T) {
 }
 
 func TestVerifyUserWithInvalidEmail(t *testing.T) {
-	_, err := Verify(mockUserFinder{err: errors.New("Not found")}, VerifyUser{
+	_, err := Verify(mockUserFinder{err: errors.New("Not found")}, VerifyRequest{
 		Email:    "notfound@gmail.com",
 		Password: "password",
 	})
@@ -42,7 +42,7 @@ func TestVerifyUserWithInvalidEmail(t *testing.T) {
 }
 
 func TestVerifyUserWithInvalidPassword(t *testing.T) {
-	_, err := Verify(mockUserFinder{user: registeredUserForVerification()}, VerifyUser{
+	_, err := Verify(mockUserFinder{user: registeredUserForVerification()}, VerifyRequest{
 		Email:    "lukemorton.dev@gmail.com",
 		Password: "not valid",
 	})
@@ -51,7 +51,7 @@ func TestVerifyUserWithInvalidPassword(t *testing.T) {
 }
 
 func registeredUserForVerification() User {
-	registeredUser, _ := Register(mockUserCreator{}, RegisterUser{
+	registeredUser, _ := Register(mockUserCreator{}, RegisterRequest{
 		Email:    "lukemorton.dev@gmail.com",
 		Password: "password",
 	})

@@ -29,7 +29,7 @@ func (app *app) Engine() *gin.Engine {
 	})
 
 	http.POST("/register.json", func(c *gin.Context) {
-		var r users.RegisterUser
+		var r users.RegisterRequest
 		c.BindJSON(&r)
 		user, err := users.Register(app.Store, r)
 
@@ -41,9 +41,9 @@ func (app *app) Engine() *gin.Engine {
 	})
 
 	http.POST("/verify.json", func(c *gin.Context) {
-		var v users.VerifyUser
-		c.BindJSON(&v)
-		user, err := users.Verify(app.Store, v)
+		var r users.VerifyRequest
+		c.BindJSON(&r)
+		user, err := users.Verify(app.Store, r)
 
 		if err == nil {
 			c.JSON(200, user)
@@ -53,7 +53,7 @@ func (app *app) Engine() *gin.Engine {
 	})
 
 	http.POST("/password/reset.json", func(c *gin.Context) {
-		var r users.ResetPasswordUser
+		var r users.ResetPasswordRequest
 		c.BindJSON(&r)
 		token, err := users.ResetPassword(app.Store, r)
 
@@ -66,9 +66,9 @@ func (app *app) Engine() *gin.Engine {
 	})
 
 	http.POST("/password/change.json", func(c *gin.Context) {
-		var u users.ChangePasswordUser
-		c.BindJSON(&u)
-		user, err := users.ChangePassword(app.Store, u)
+		var r users.ChangePasswordRequest
+		c.BindJSON(&r)
+		user, err := users.ChangePassword(app.Store, r)
 
 		if err == nil {
 			c.JSON(200, user)

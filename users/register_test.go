@@ -7,7 +7,7 @@ import (
 )
 
 func TestRegisterValidUser(t *testing.T) {
-	user, err := Register(mockUserCreator{}, RegisterUser{
+	user, err := Register(mockUserCreator{}, RegisterRequest{
 		Email:    "lukemorton.dev@gmail.com",
 		Password: "bob",
 	})
@@ -18,7 +18,7 @@ func TestRegisterValidUser(t *testing.T) {
 }
 
 func TestRegisterUserWithoutEmail(t *testing.T) {
-	_, err := Register(mockUserCreator{}, RegisterUser{
+	_, err := Register(mockUserCreator{}, RegisterRequest{
 		Password: "bob",
 	})
 
@@ -26,7 +26,7 @@ func TestRegisterUserWithoutEmail(t *testing.T) {
 }
 
 func TestRegisterUserWithoutPassword(t *testing.T) {
-	_, err := Register(mockUserCreator{}, RegisterUser{
+	_, err := Register(mockUserCreator{}, RegisterRequest{
 		Email: "lukemorton.dev@gmail.com",
 	})
 
@@ -36,7 +36,7 @@ func TestRegisterUserWithoutPassword(t *testing.T) {
 func TestUserCreatorError(t *testing.T) {
 	users := mockUserCreator{errors.New("Uh oh")}
 
-	_, err := Register(users, RegisterUser{
+	_, err := Register(users, RegisterRequest{
 		Email:    "lukemorton.dev@gmail.com",
 		Password: "bob",
 	})
