@@ -7,7 +7,7 @@ import (
 )
 
 func TestResetPassword(t *testing.T) {
-	token, err := ResetPassword(mockFindUser(), ResetPasswordUser{
+	token, err := ResetPassword(mockPasswordResetterFindUser(), ResetPasswordUser{
 		Email: "lukemorton.dev@gmail.com",
 	})
 
@@ -16,27 +16,27 @@ func TestResetPassword(t *testing.T) {
 }
 
 func TestResetPasswordWithMissingEmail(t *testing.T) {
-	token, err := ResetPassword(mockFindUser(), ResetPasswordUser{})
+	token, err := ResetPassword(mockPasswordResetterFindUser(), ResetPasswordUser{})
 
 	assert.Empty(t, token)
 	assert.EqualError(t, err, "Email address required to reset password")
 }
 
 func TestResetPasswordWithInvalidEmail(t *testing.T) {
-	_, err := ResetPassword(mockFindErr("Email not found"), ResetPasswordUser{
+	_, err := ResetPassword(mockPasswordResetterFindErr("Email not found"), ResetPasswordUser{
 		Email: "lukemorton.dev@gmail.com",
 	})
 
 	assert.EqualError(t, err, "Email not found")
 }
 
-func mockFindUser() mockUserPasswordResetter {
+func mockPasswordResetterFindUser() mockUserPasswordResetter {
 	return mockUserPasswordResetter{
 		findUser: User{},
 	}
 }
 
-func mockFindErr(err string) mockUserPasswordResetter {
+func mockPasswordResetterFindErr(err string) mockUserPasswordResetter {
 	return mockUserPasswordResetter{
 		findErr: errors.New(err),
 	}
