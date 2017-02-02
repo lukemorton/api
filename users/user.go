@@ -35,6 +35,14 @@ func (user *User) GenerateResetToken() string {
 	return token
 }
 
+func (user *User) VerifyResetToken(token string) error {
+	if verifyHash(user.ResetTokenHash, token) {
+		return nil
+	} else {
+		return errors.New("Invalid token")
+	}
+}
+
 func hash(s string) string {
 	h, err := bcrypt.GenerateFromPassword([]byte(s), 10)
 
