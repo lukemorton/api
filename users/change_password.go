@@ -9,7 +9,7 @@ type ChangePasswordUser struct {
 	Email       string `json:"email"`
 	Password    string `json:"password"`
 	ResetToken  string `json:"reset_token"`
-	NewPassword string `json:"password"`
+	NewPassword string `json:"new_password"`
 }
 
 func ChangePassword(users UserPasswordUpdater, c ChangePasswordUser) (User, error) {

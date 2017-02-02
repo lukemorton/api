@@ -82,6 +82,29 @@ func TestResetPasswordError(t *testing.T) {
 	assert.Equal(t, w.Code, 422, "status should be 422")
 }
 
+func TestChangePassword(t *testing.T) {
+	app := testApp()
+
+	app.POST("/register.json", h{
+		"email":    "lukemorton.dev@gmail.com",
+		"password": "bob",
+	})
+
+	w := app.POST("/password/reset.json", h{
+		"email": "lukemorton.dev@gmail.com",
+		"password": "bob",
+		"new_password": "fred",
+	})
+	assert.Equal(t, w.Code, 200, "status should be 200")
+}
+
+func TestChangePasswordError(t *testing.T) {
+	w := POST("/password/change.json", h{
+		"email": "lukemorton.dev@gmail.com",
+	})
+	assert.Equal(t, w.Code, 422, "status should be 422")
+}
+
 func TestBadRequest(t *testing.T) {
 	var w *httptest.ResponseRecorder
 

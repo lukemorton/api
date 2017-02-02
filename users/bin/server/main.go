@@ -65,6 +65,18 @@ func (app *app) Engine() *gin.Engine {
 		}
 	})
 
+	http.POST("/password/change.json", func(c *gin.Context) {
+		var u users.ChangePasswordUser
+		c.BindJSON(&u)
+		user, err := users.ChangePassword(app.Store, u)
+
+		if err == nil {
+			c.JSON(200, user)
+		} else {
+			c.JSON(422, gin.H{"error": err.Error()})
+		}
+	})
+
 	http.NoRoute(func(c *gin.Context) {
 		c.JSON(400, gin.H{"error": "Bad request, check the docs."})
 	})
