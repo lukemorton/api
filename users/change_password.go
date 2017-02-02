@@ -2,7 +2,6 @@ package users
 
 import (
 	"errors"
-	"log"
 )
 
 type ChangePasswordUser struct {
@@ -18,8 +17,6 @@ func ChangePassword(users UserPasswordUpdater, c ChangePasswordUser) (User, erro
 	if err != nil {
 		return User{}, err
 	}
-
-	log.Print(c.Password != "")
 
 	if c.Password != "" {
 		return changePasswordByEmailAndPassword(users, c)
