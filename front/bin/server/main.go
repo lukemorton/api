@@ -22,6 +22,7 @@ type hostSwitch map[string]http.Handler
 
 func (hs hostSwitch) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.Host)
+
 	if handler := hs[r.Host]; handler != nil {
 		handler.ServeHTTP(w, r)
 	} else {
