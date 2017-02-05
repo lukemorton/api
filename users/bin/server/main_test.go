@@ -15,7 +15,7 @@ import (
 
 func TestStatus(t *testing.T) {
 	w := GET("/status.json")
-	assert.Equal(t, w.Code, 200, "status should be 200")
+	assert.Equal(t, 200, w.Code, "status should be 200")
 }
 
 func TestRegister(t *testing.T) {
@@ -33,7 +33,7 @@ func TestRegisterError(t *testing.T) {
 	w := POST("/register.json", h{
 		"email": "lukemorton.dev@gmail.com",
 	})
-	assert.Equal(t, w.Code, 422, "status should be 422")
+	assert.Equal(t, 422, w.Code, "status should be 422")
 }
 
 func TestVerify(t *testing.T) {
@@ -58,7 +58,7 @@ func TestVerifyError(t *testing.T) {
 		"email":    "lukemorton.dev@gmail.com",
 		"password": "bob",
 	})
-	assert.Equal(t, w.Code, 401, "status should be 401")
+	assert.Equal(t, 401, w.Code, "status should be 401")
 }
 
 func TestResetPassword(t *testing.T) {
@@ -72,14 +72,14 @@ func TestResetPassword(t *testing.T) {
 	w := app.POST("/password/reset.json", h{
 		"email": "lukemorton.dev@gmail.com",
 	})
-	assert.Equal(t, w.Code, 200, "status should be 200")
+	assert.Equal(t, 200, w.Code, "status should be 200")
 }
 
 func TestResetPasswordError(t *testing.T) {
 	w := POST("/password/reset.json", h{
 		"email": "lukemorton.dev@gmail.com",
 	})
-	assert.Equal(t, w.Code, 422, "status should be 422")
+	assert.Equal(t, 422, w.Code, "status should be 422")
 }
 
 func TestChangePassword(t *testing.T) {
@@ -95,27 +95,27 @@ func TestChangePassword(t *testing.T) {
 		"password": "bob",
 		"new_password": "fred",
 	})
-	assert.Equal(t, w.Code, 200, "status should be 200")
+	assert.Equal(t, 200, w.Code, "status should be 200")
 }
 
 func TestChangePasswordError(t *testing.T) {
 	w := POST("/password/change.json", h{
 		"email": "lukemorton.dev@gmail.com",
 	})
-	assert.Equal(t, w.Code, 422, "status should be 422")
+	assert.Equal(t, 422, w.Code, "status should be 422")
 }
 
 func TestBadRequest(t *testing.T) {
 	var w *httptest.ResponseRecorder
 
 	w = GET("/")
-	assert.Equal(t, w.Code, 400, "status should be 400")
+	assert.Equal(t, 400, w.Code, "status should be 400")
 
 	w = POST("/", nil)
-	assert.Equal(t, w.Code, 400, "status should be 400")
+	assert.Equal(t, 400, w.Code, "status should be 400")
 
 	w = GET("/nope")
-	assert.Equal(t, w.Code, 400, "status should be 400")
+	assert.Equal(t, 400, w.Code, "status should be 400")
 }
 
 func GET(path string) *httptest.ResponseRecorder {
