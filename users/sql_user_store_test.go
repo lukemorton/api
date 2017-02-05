@@ -77,9 +77,7 @@ func TestFindByEmail(t *testing.T) {
 }
 
 func TestFindByEmailWithUnknownEmail(t *testing.T) {
-	users := SQLUserStore()
-	users.CreateStore()
-
+	users := store()
 	_, err := users.FindByEmail("a@gmail.com")
 	assert.EqualError(t, err, "Email not recognised")
 }
@@ -87,6 +85,7 @@ func TestFindByEmailWithUnknownEmail(t *testing.T) {
 func store() *sqlUserStore {
 	users := SQLUserStore()
 	users.CreateStore()
+	users.ClearStore()
 	return users
 }
 

@@ -127,7 +127,11 @@ func POST(path string, body interface{}) *httptest.ResponseRecorder {
 }
 
 func testApp() testAppAgent {
-	return testAppAgent{HTTP()}
+	users := users.SQLUserStore()
+	users.CreateStore()
+	users.ClearStore()
+	app := app{users}
+	return testAppAgent{app.Engine()}
 }
 
 type testAppAgent struct {

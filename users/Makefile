@@ -1,7 +1,8 @@
 all: start
 
 test:
-	go test ./...
+	go test .
+	go test ./bin/server
 
 start: test
 	go run bin/server/main.go

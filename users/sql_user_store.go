@@ -3,21 +3,30 @@ package users
 import (
 	"errors"
 	"github.com/jmoiron/sqlx"
-	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/go-sql-driver/mysql"
 	"log"
+	"os"
 	"time"
+	"strings"
 )
 
 const (
 	defaultCreateTableQuery = `
-		CREATE TABLE users (
-			id INTEGER PRIMARY KEY,
+		CREATE TABLE IF NOT EXISTS users (
+			id INTEGER AUTO_INCREMENT PRIMARY KEY,
 			created_at DATETIME,
 			updated_at DATETIME,
-			email VARCHAR UNIQUE,
-			password_hash VARCHAR,
-			reset_token_hash VARCHAR
-		);
+			email VARCHAR(256),
+			password_hash VARCHAR(128),
+			reset_token_hash VARCHAR(128),
+			UNIQUE(email)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8
+	`
+	defaultTruncateTableQuery = `
+		TRUNCATE TABLE users;
+	`
+	defaultDropTableQuery = `
+		DROP TABLES users;
 	`
 	defaultCreateQuery = `
 		INSERT INTO users
@@ -37,7 +46,13 @@ const (
 )
 
 func SQLUserStore() *sqlUserStore {
-	db, err := sqlx.Connect("sqlite3", ":memory:")
+	databaseUrl := os.Getenv("DATABASE_URL")
+
+	if databaseUrl == "" {
+		log.Fatalln("No DATABASE_URL defined")
+	}
+
+	db, err := sqlx.Connect("mysql", databaseUrl)
 
 	if err != nil {
 		log.Fatalln(err)
@@ -64,13 +79,21 @@ func (db *sqlUserStore) CreateStore() {
 	db.MustExec(defaultCreateTableQuery)
 }
 
+func (db *sqlUserStore) ClearStore() {
+	db.MustExec(defaultTruncateTableQuery)
+}
+
+func (db *sqlUserStore) DeleteStore() {
+	db.MustExec(defaultDropTableQuery)
+}
+
 func (db *sqlUserStore) Create(user *User) error {
 	user.CreatedAt = time.Now()
 	user.UpdatedAt = time.Now()
 	result, err := db.NamedExec(db.createQuery, *user)
 
 	if err != nil {
-		if err.Error() == "UNIQUE constraint failed: users.email" {
+		if strings.Contains(err.Error(), "Duplicate entry") {
 			return errors.New("Email already taken")
 		} else {
 			panic(err)
@@ -120,6 +143,6 @@ func (db *sqlUserStore) updateField(user *User, query string, value interface{})
 	}
 
 	if rows == 0 {
-		panic(user)
+		panic("No rows updated")
 	}
 }

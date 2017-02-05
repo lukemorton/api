@@ -19,6 +19,15 @@ cd src/github.com/lukemorton/api/users
 go get ./...
 ```
 
+**Setup database:**
+
+Create MySQL instance with docker:
+
+```
+docker run --name api-users-mysql -e MYSQL_ROOT_PASSWORD=root MYSQL_DATABASE=users -d mysql
+export DATABASE_URL="root:root@/users?parseTime=true&clientFoundRows=true"
+```
+
 **Running tests:**
 
 ```
