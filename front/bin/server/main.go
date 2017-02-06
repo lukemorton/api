@@ -12,8 +12,8 @@ func main() {
 	hs := hostSwitch{}
 
 	hs["default"] = defaultRouter()
-	hs["users.localhost:3000"] = wrapProxy(users())
-	hs["authors.localhost:3000"] = wrapProxy(authors())
+	hs["users"] = wrapProxy(users())
+	hs["authors"] = wrapProxy(authors())
 
 	log.Fatal(http.ListenAndServe("0.0.0.0:3000", hs))
 }
@@ -52,11 +52,11 @@ func defaultRouter() *gin.Engine {
 }
 
 func users() *httputil.ReverseProxy {
-	url, _ := url.Parse("http://localhost:3001")
+	url, _ := url.Parse("http://users:3001")
 	return httputil.NewSingleHostReverseProxy(url)
 }
 
 func authors() *httputil.ReverseProxy {
-	url, _ := url.Parse("http://localhost:3002")
+	url, _ := url.Parse("http://authors:3002")
 	return httputil.NewSingleHostReverseProxy(url)
 }
