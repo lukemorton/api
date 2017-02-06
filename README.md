@@ -24,6 +24,6 @@ make
 
 Now visit any of the following:
 
- - [https://localhost](https://localhost)
- - [https://users](https://users)
- - [https://authors](https://authors)
+ - [http://localhost](http://localhost)
+ - [http://users](http://users)
+ - [http://authors](http://authors)
