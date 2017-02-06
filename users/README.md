@@ -1,4 +1,4 @@
-# api.lukemorton.co.uk/users
+# users.api.lukemorton.co.uk
 
 ## Prerequisites
 
