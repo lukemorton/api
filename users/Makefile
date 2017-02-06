@@ -21,10 +21,6 @@ start: test
 build:
 	mkdir -p dist
 	CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o ./dist/server ./bin/server
-	docker build -t api-users .
-
-docker: build
-	docker run -it --rm --publish 3000:3000 api
 
 deploy: build
 	now --alias api-users.lukemorton.co.uk
