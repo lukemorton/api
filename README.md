@@ -1,10 +1,11 @@
 # \*.api.lukemorton.co.uk
 
+A concert of micro service APIs.
+
 ## Prerequisites
 
 - Install [go](https://golang.org/dl/) :D **required**
-- Install [now-cli](https://github.com/zeit/now-cli/) if you're deploying to now
-- Install [docker](https://www.docker.com/products/overview#/install_the_platform) if you're testing the docker file locally
+- Install [docker](https://www.docker.com/products/overview#/install_the_platform) if you're developing and the micro service APIs in concert
 
 ## Development
 
