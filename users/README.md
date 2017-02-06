@@ -24,11 +24,12 @@ go get ./...
 Create MySQL instance with docker:
 
 ```
-docker run --name api-users-mysql -e MYSQL_ROOT_PASSWORD=root MYSQL_DATABASE=users -d mysql
-export DATABASE_URL="root:root@/users?parseTime=true&clientFoundRows=true"
+make db
 ```
 
 **Running tests:**
+
+After running `make db` you can run:
 
 ```
 make test
