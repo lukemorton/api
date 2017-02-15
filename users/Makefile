@@ -3,7 +3,8 @@ ENV := DATABASE_URL="root:root@/users?parseTime=true&clientFoundRows=true"
 all: start
 
 db:
-ifeq ($(shell docker ps -a --format "{{.Names}}" | grep api-users-mysql-for-host),)
+ifeq ($(shell docker ps --format "{{.Names}}" | grep api-users-mysql-for-host),)
+	docker rm -f api-users-mysql-for-host
 	docker run -d --name api-users-mysql-for-host --publish 3306:3306 --env MYSQL_ROOT_PASSWORD=root --env MYSQL_DATABASE=users mysql
 	# Sleep for a minute to wait for MySQL to setup
 	sleep 60
