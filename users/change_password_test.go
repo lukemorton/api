@@ -8,8 +8,8 @@ import (
 
 func TestChangePasswordByPassword(t *testing.T) {
 	user, err := ChangePassword(mockPasswordChangerFindUser(), ChangePasswordRequest{
-		Email: "lukemorton.dev@gmail.com",
-		Password: "bob",
+		Email:       "lukemorton.dev@gmail.com",
+		Password:    "bob",
 		NewPassword: "fred",
 	})
 
@@ -19,7 +19,7 @@ func TestChangePasswordByPassword(t *testing.T) {
 
 func TestChangePasswordByPasswordWithMissingNewPassword(t *testing.T) {
 	_, err := ChangePassword(mockUserPasswordChanger{}, ChangePasswordRequest{
-		Email: "lukemorton.dev@gmail.com",
+		Email:    "lukemorton.dev@gmail.com",
 		Password: "bob",
 	})
 
@@ -30,8 +30,8 @@ func TestChangePasswordByResetToken(t *testing.T) {
 	user, token := userWithResetToken()
 
 	user, err := ChangePassword(mockUserPasswordChanger{findUser: user}, ChangePasswordRequest{
-		Email: "lukemorton.dev@gmail.com",
-		ResetToken: token,
+		Email:       "lukemorton.dev@gmail.com",
+		ResetToken:  token,
 		NewPassword: "fred",
 	})
 
@@ -43,7 +43,7 @@ func TestChangePasswordByResetTokenWithMissingNewPassword(t *testing.T) {
 	user, token := userWithResetToken()
 
 	user, err := ChangePassword(mockUserPasswordChanger{findUser: user}, ChangePasswordRequest{
-		Email: "lukemorton.dev@gmail.com",
+		Email:      "lukemorton.dev@gmail.com",
 		ResetToken: token,
 	})
 
@@ -52,7 +52,7 @@ func TestChangePasswordByResetTokenWithMissingNewPassword(t *testing.T) {
 
 func TestChangePasswordWithMissingPasswordAndResetToken(t *testing.T) {
 	_, err := ChangePassword(mockUserPasswordChanger{}, ChangePasswordRequest{
-		Email: "lukemorton.dev@gmail.com",
+		Email:       "lukemorton.dev@gmail.com",
 		NewPassword: "bob",
 	})
 
@@ -61,7 +61,7 @@ func TestChangePasswordWithMissingPasswordAndResetToken(t *testing.T) {
 
 func TestChangePasswordWithMissingEmail(t *testing.T) {
 	_, err := ChangePassword(mockPasswordChangerFindUser(), ChangePasswordRequest{
-		Password: "bob",
+		Password:    "bob",
 		NewPassword: "fred",
 	})
 
@@ -70,8 +70,8 @@ func TestChangePasswordWithMissingEmail(t *testing.T) {
 
 func TestChangePasswordWithInvalidEmail(t *testing.T) {
 	_, err := ChangePassword(mockPasswordChangerFindErr("Email not found"), ChangePasswordRequest{
-		Email: "lukemorton.dev@gmail.com",
-		Password: "bob",
+		Email:       "lukemorton.dev@gmail.com",
+		Password:    "bob",
 		NewPassword: "fred",
 	})
 

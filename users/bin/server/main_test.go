@@ -91,8 +91,8 @@ func TestChangePassword(t *testing.T) {
 	})
 
 	w := app.POST("/password/reset.json", h{
-		"email": "lukemorton.dev@gmail.com",
-		"password": "bob",
+		"email":        "lukemorton.dev@gmail.com",
+		"password":     "bob",
 		"new_password": "fred",
 	})
 	assert.Equal(t, 200, w.Code, "status should be 200")

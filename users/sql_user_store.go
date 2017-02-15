@@ -2,12 +2,12 @@ package users
 
 import (
 	"errors"
-	"github.com/jmoiron/sqlx"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/jmoiron/sqlx"
 	"log"
 	"os"
-	"time"
 	"strings"
+	"time"
 )
 
 const (
