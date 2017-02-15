@@ -44,6 +44,10 @@ func wrapProxy(proxy http.Handler) *gin.Engine {
 func defaultRouter() *gin.Engine {
 	http := gin.Default()
 
+	http.GET("/status.json", func(c *gin.Context) {
+		c.JSON(200, gin.H{"status": "good"})
+	})
+
 	http.NoRoute(func(c *gin.Context) {
 		c.JSON(400, gin.H{"error": "Bad request, check the docs ;)"})
 	})
